@@ -9,11 +9,9 @@ from Site.models import Candidates
 def home_page(request):
     
     if request.method=="POST":
-        Candidates.objects.create(Name=request.POST['candidate_name'])#,Surname=request.POST[])
+        Candidates.objects.create(Name=request.POST['candidate_name'], Surname =request.POST['candidate_surname'])
 
     candidates = Candidates.objects.all()
-    # print("____________________________________________")
-    # print(candidates)
-    # print("____________________________________________")
+    
     return render(request,'home.html', {'candidates':candidates})
 
