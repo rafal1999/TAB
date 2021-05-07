@@ -6,5 +6,18 @@
         <center>
             Hello wor(l)d
         </center>
+       
+        <form method="POST">
+            <input name="candidate_name" id="id_candidate_name" placeholder="Enter a candidate name"/>
+            <input name="candidate_surname" id="id_candidate_surname" placeholder="Enter a candidate name"/>
+            {% csrf_token %}
+        </form>
+        <center>
+            <table id="id_table">
+                {% for c in candidates%}
+                <tr><td>{{c.Name}}</td> <td>{{c.Surname}}</td> </tr> 
+                {% endfor %}
+            </table>
+        </center>
     </body>
 </html>
