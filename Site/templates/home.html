@@ -15,7 +15,7 @@
             <center>
             <table id="id_table">
                 {% for c in candidates%}
-                <tr><td>{{c.Name}}</td> <td>{{c.Surname}}</td> </tr> 
+                <tr><td>{{c.Name}}</td> <td>{{c.Surname}}</td> <td>{{c.Application_date}}</td> <td> {{c.Birthdate}}</td></tr> 
                 {% endfor %}
             </table>
         </center>
