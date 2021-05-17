@@ -14,8 +14,8 @@
         </form>
             <center>
             <table id="id_table">
-                {% for c in candidates%}
-                <tr><td>{{c.Name}}</td> <td>{{c.Surname}}</td> <td>{{c.Application_date}}</td> <td> {{c.Birthdate}}</td></tr> 
+                {% for c in candidates%}                                                                                        <!--odwoywanie się do tabel połaczonych nie wprost-->
+                <tr><td>{{c.Name}}</td> <td>{{c.Surname}}</td> <td> {{c.Birthdate}}</td> <td> {{c.ID_Workers_Role.Name}}</td></tr> 
                 {% endfor %}
             </table>
         </center>
