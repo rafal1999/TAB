@@ -32,7 +32,7 @@ class Candidates(models.Model):
 
 class Workers_Role(models.Model):
     ID = models.AutoField(primary_key=True)
-    Name = models.TextField(default="")
+    Name = models.TextField(default="",unique=True)
 class Workers(models.Model):
     ID = models.AutoField(primary_key=True)
     Name = models.TextField(default="",null=True)
