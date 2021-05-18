@@ -7,12 +7,28 @@
 />
 
 <html>
-    <title>Najlepszy program na świecie!</title>
-    <body>
-        <center>
-            Hello wor(l)d
-        </center>
-       
+    <title>Candidates recruitment system</title>
+    <body style="background-color:ivory">
+        <nav class="navbar sticky-top navbar-dark bg-primary navbar-expand-lg" style="height: 50px" >
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Logo</a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Calendary</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Workers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Candidates</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+          </nav>
+
+        <h1>Add workers data</h1>
         <form method="POST">
             <input name="worker_name" id="id_worker_name" placeholder="Enter a worker name"/>
             {% csrf_token %}
@@ -22,15 +38,18 @@
             <input name="worker_day_of_birth" id="id_worker_day_of_birth" placeholder="Enter a worker day of birth"/>
             <input name="worker_role" id="id_worker_role" placeholder="Enter a worker role"/>
 
-            <button>Send</button> 
+            <button>Add</button> 
             <!-- button jest konieczy żeby wysłać cały formularz razem w jednej cześci  -->
         </form>
-            <center>
+        <center>
+            <h1>All workers</h1>
             <table id="id_table">
                 {% for w in workers%}                                                          <!--odwoywanie się do tabel połaczonych nie wprost przez klucz obcy (taka składnia) c.ID_Workers_Role.Name-->
                 <tr><td>{{w.Name}}</td> <td>{{w.Surname}}</td> <td> {{w.Birthdate}}</td> <td> {{w.ID_Workers_Role.Name}}</td></tr> 
                 {% endfor %}
             </table>
         </center>
+        <nav class="navbar fixed-bottom navbar-dark bg-primary " style="height: 50px" ></nav>
     </body>
+
 </html>
