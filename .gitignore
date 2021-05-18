@@ -1,5 +1,6 @@
 .vs
 .vscode
 __pycache__
+Site/__pycache__
 *.pyc
 
