@@ -12,7 +12,7 @@ class Candidates(models.Model):
     Application_date = models.DateField(auto_now=False, auto_now_add=True)
     Phone_number=models.CharField(max_length=13, null=True) # istnije takie cos jak phone number 
     Sex = models.CharField(max_length=1, null=True)
-    Email_addres = models.EmailField(max_length=50,null=True)
+    Email_address = models.EmailField(max_length=50,null=True)
     CV= models.TextField(default="")
     Motivation_letter = models.TextField(default="")
     Stage = models.CharField(max_length=1,default='1') #!

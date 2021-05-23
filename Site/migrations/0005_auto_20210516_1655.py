@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='candidates',
-            name='Email_addres',
+            name='Email_address',
             field=models.EmailField(default=django.utils.timezone.now, max_length=50),
             preserve_default=False,
         ),

@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('Birthdate', models.DateField(null=True)),
                 ('Login', models.CharField(max_length=32, null=True)),
                 ('Password', models.CharField(default='', max_length=32)),
-                ('Email_addres', models.EmailField(max_length=50, null=True)),
+                ('Email_address', models.EmailField(max_length=50, null=True)),
                 ('ID_Workers_Role', models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, to='Site.workers_role')),
             ],
         ),
