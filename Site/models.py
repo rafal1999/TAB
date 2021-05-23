@@ -40,6 +40,28 @@ class Workers(models.Model):
     Birthdate = models.DateField(auto_now=False, auto_now_add=False,null=True)
     Login = models.CharField(max_length=32,null=True)
     Password = models.CharField(max_length=32,null=False,default="")
-    Email_addres = models.EmailField(max_length=50,null=True)
+    Email_address = models.EmailField(max_length=50,null=True)
     ID_Workers_Role = models.ForeignKey("Workers_Role", default=None, null=True, on_delete=models.SET_NULL)
+
+class Tests(models.Model):
+    ID = models.AutoField(primary_key=True)
+    #Name = models.TextField(default="",unique=True) można by w sumie dodać nazwę testu
+    Points = models.DecimalField(5, 2)
+
+class Recruitment_Meetings(models.Model):
+    ID = models.AutoField(primary_key=True)
+    Hard_skills = models.TextField(default="",null=True)
+    Soft_skills = models.TextField(default="",null=True)
+    Grade = models.IntegerField()
+    Notes = models.TextField(default="",null=True)
+
+class Calendar(models.Model):
+    ID = models.AutoField(primary_key=True)
+    Meeting_date = models.DateField(auto_now=False, auto_now_add=False)
+    Description = models.TextField(default="",null=True)
+    Stage = models.CharField(max_length=1,default='1')
+    Workers_ID_Worker = models.ForeignKey("Workers", default=None, null=True, on_delete=models.SET_NULL)
+    Candidates_ID_Candidate = models.ForeignKey("Candidates", default=None, null=True, on_delete=models.SET_NULL)
+    Tests_ID = models.ForeignKey("Tests", default=None, null=True, on_delete=models.SET_NULL)
+    Recruitment_Meetings_ID = models.ForeignKey("Recruitment_Meetings", default=None, null=True, on_delete=models.SET_NULL)
 
