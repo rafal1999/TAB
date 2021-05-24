@@ -33,6 +33,10 @@ class Candidates(models.Model):
 class Workers_Role(models.Model):
     ID = models.AutoField(primary_key=True)
     Name = models.TextField(default="",unique=True)
+
+    def __str__(self):
+        return self.Name
+    
 class Workers(models.Model):
     ID = models.AutoField(primary_key=True)
     Name = models.TextField(default="",null=True)

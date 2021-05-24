@@ -2,5 +2,6 @@
 .vscode
 __pycache__
 Site/__pycache__
+Site/migrations/__pycache__
 *.pyc
 
