@@ -29,7 +29,7 @@ class Candidates(models.Model):
         return self.Birthdate
     def __str__(self):
         return self.Phone_number
-
+    
 class Workers_Role(models.Model):
     ID = models.AutoField(primary_key=True)
     Name = models.TextField(default="",unique=True)
@@ -46,7 +46,7 @@ class Workers(models.Model):
 class Tests(models.Model):
     ID = models.AutoField(primary_key=True)
     #Name = models.TextField(default="",unique=True) można by w sumie dodać nazwę testu
-    Points = models.DecimalField(5, 2)
+    Points = models.DecimalField(max_digits = 5, decimal_places = 2)
 
 class Recruitment_Meetings(models.Model):
     ID = models.AutoField(primary_key=True)
