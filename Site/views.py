@@ -4,7 +4,7 @@ from django.http                import HttpResponse
 # from django.db.models           import F, Value
 from Site.models                import Candidates, Workers, Workers_Role 
 from datetime                   import date
-from Site.add_functions         import add_worker
+from Site.api.workers           import add_worker
 from django.views               import View
 from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth        import login, authenticate

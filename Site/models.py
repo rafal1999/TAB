@@ -1,8 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-from enum import Enum
-
 SEX_FEMALE = 'F'
 SEX_MALE = 'M'
 SEX_UNSURE = 'U'
@@ -12,10 +10,6 @@ SEX_OPTIONS = (
     (SEX_FEMALE, 'Female'),
     (SEX_MALE, 'Male'),
     )
-
-class sex_choice(Enum):
-    Man = 'Man'
-    Woman = 'Woman'
 
 STAGE_ZERO   = '0' # kandydat zgłoszony
 STAGE_FIRST  = '1' # test napisany               #TODO może zmienić na inty w bazie łatwiej sortować??
@@ -28,10 +22,6 @@ STAGE_OPTIONS = (     #TODO W miejsca 0,1,2 nadać opisy jakie by były fajne (t
     (STAGE_SECOND, '2'),    #!
     (STAGE_THIRD, '3')      #!
     )
-class stage_choice(Enum): #TODO można zmienić nazwy na troche inne etapy albo juz wgl kolejna tabela do entapów 
-    first = 'first'
-    second = 'second'
-    third = 'third'
 
 HIRED_YES        = 'Y'
 HIRED_NO         = 'N'
@@ -52,11 +42,6 @@ PRESENT_OPTIONS = (
     (PRESENT_YES, 'Yes'),
     (PRESENT_NO, 'No'),
 )
-
-class hired_choice(Enum):
-    in_process = "In process"
-    yes = "Yes"
-    no = "No"
 
 class Candidates_Role(models.Model):
     ID = models.AutoField(primary_key=True)
@@ -91,7 +76,7 @@ class Candidates(models.Model): #TODO zmienić klucz obcy do Ról kandydatów
         verbose_name_plural = 'Candidates'
     
     def __str__(self):
-        return self.Name + self.Surname
+        return self.Name +' '+ self.Surname
     
 
 class Workers_Role(models.Model):
