@@ -28,8 +28,8 @@ HIRED_NO         = 'N'
 HIRED_IN_PROCESS = 'P'
 
 HIRED_OPTIONS = (
-    (STAGE_SECOND, 'In process'),
-    (HIRED_IN_PROCESS, 'Yes'),
+    (HIRED_IN_PROCESS, 'In process'),
+    (HIRED_YES, 'Yes'),
     (HIRED_NO, 'No'),
     )
 
