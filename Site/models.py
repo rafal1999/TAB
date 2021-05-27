@@ -66,7 +66,6 @@ class Candidates(models.Model): #TODO zmienić klucz obcy do Ról kandydatów
     Email_address = models.EmailField(max_length=50,null=True)
     CV= models.TextField(default="")                                                                                #TODO mozliwa zmiana argumentów gdzy dojdzemy do implemetacji cv
     Motivation_letter = models.TextField(default="")                                                                #TODO mozliwa zmiana argumentów gdzy dojdzemy do implementacji
-    Stage = models.CharField(max_length=1,default='',choices=STAGE_OPTIONS)#choices=[(tag,tag.value) for tag in stage_choice]) 
     Hired = models.CharField(max_length=10,default='',choices=HIRED_OPTIONS)# choices=[(tag,tag.value) for tag in hired_choice])
     ID_Candidates_Role = models.ForeignKey('Candidates_Role',default=None,null=True, on_delete= models.SET_NULL)  
     # CV_v2= models.FilePathField(unique=True,path=None, match=None,max_length=200) #TODO trzeba przetestować bardziej wnikliwie 
@@ -78,6 +77,11 @@ class Candidates(models.Model): #TODO zmienić klucz obcy do Ról kandydatów
     def __str__(self):
         return self.Name +' '+ self.Surname
     
+class Recruitment_Proces(models.Model):
+    ID =models.AutoField(primary_key=True)
+    Stage = models.CharField(max_length=1,default='',choices=STAGE_OPTIONS)#choices=[(tag,tag.value) for tag in stage_choice]) 
+    ID_Candidates_Role = models.ForeignKey('Candidates_Role',default=None,null=True, on_delete= models.SET_NULL)
+    ID_Candidates = models.ForeignKey("Candidates", default=None, null=True, verbose_name='Candidate' ,on_delete=models.SET_NULL)
 
 class Workers_Role(models.Model):
     ID = models.AutoField(primary_key=True)
@@ -89,7 +93,7 @@ class Workers_Role(models.Model):
 
     def __str__(self): #konieczne jeśli w django admin chemy wybierać po nazwie roli a nie Role_object (1..n)
         return self.Name
-    
+
 class Workers(models.Model):
     ID = models.AutoField(primary_key=True)
     Name = models.CharField(default="",null=True, max_length=25)
