@@ -67,7 +67,6 @@ class Candidates(models.Model): #TODO zmienić klucz obcy do Ról kandydatów
     CV= models.TextField(default="")                                                                                #TODO mozliwa zmiana argumentów gdzy dojdzemy do implemetacji cv
     Motivation_letter = models.TextField(default="")                                                                #TODO mozliwa zmiana argumentów gdzy dojdzemy do implementacji
     Hired = models.CharField(max_length=10,default='',choices=HIRED_OPTIONS)# choices=[(tag,tag.value) for tag in hired_choice])
-    ID_Candidates_Role = models.ForeignKey('Candidates_Role',default=None,null=True, on_delete= models.SET_NULL)  
     # CV_v2= models.FilePathField(unique=True,path=None, match=None,max_length=200) #TODO trzeba przetestować bardziej wnikliwie 
     
     class Meta:
@@ -77,11 +76,26 @@ class Candidates(models.Model): #TODO zmienić klucz obcy do Ról kandydatów
     def __str__(self):
         return self.Name +' '+ self.Surname
     
-class Recruitment_Proces(models.Model):
+class Recruitment_Process(models.Model):
     ID =models.AutoField(primary_key=True)
     Stage = models.CharField(max_length=1,default='',choices=STAGE_OPTIONS)#choices=[(tag,tag.value) for tag in stage_choice]) 
     ID_Candidates_Role = models.ForeignKey('Candidates_Role',default=None,null=True, on_delete= models.SET_NULL)
     ID_Candidates = models.ForeignKey("Candidates", default=None, null=True, verbose_name='Candidate' ,on_delete=models.SET_NULL)
+
+    class Meta:
+        verbose_name = 'Role'
+        verbose_name_plural = 'Recruitment process'
+
+class Tests(models.Model):
+    ID = models.AutoField(primary_key=True)
+    Points = models.DecimalField(max_digits = 5, decimal_places = 2,validators=[MaxValueValidator(100),MinValueValidator(0)],null=True )
+    Check_out_date = models.DateField(auto_now=False, auto_now_add=True) 
+    ID_Recruitment_Process = models.ForeignKey("Recruitment_Process", default=None, null=True, verbose_name='Recruitment process' ,on_delete=models.SET_NULL)
+
+    
+    class Meta:
+        verbose_name = 'test'
+        verbose_name_plural = 'Tests'
 
 class Workers_Role(models.Model):
     ID = models.AutoField(primary_key=True)
@@ -112,15 +126,6 @@ class Workers(models.Model):
         return self.Name +' '+self.Surname
     
 
-class Tests(models.Model):
-    ID = models.AutoField(primary_key=True)
-    #Name = models.TextField(default="",unique=True) można by w sumie dodać nazwę testu W przypadku gdy połaczymy test bezposrednio z kandeydatem i roloa nie muimy nadwać nazwy bo test bedze przypisany do roli i kandydata
-    Points = models.DecimalField(max_digits = 5, decimal_places = 2,validators=[MaxValueValidator(100),MinValueValidator(0)],null=True )
-    ID_Candidates_Role = models.ForeignKey('Candidates_Role',default=None,null=False,verbose_name='Role', on_delete= models.CASCADE)
-    # ID_Candidates = models.ForeignKey('Candidates',default=None,null=False, on_delete= models.CASCADE)
-    class Meta:
-        verbose_name = 'test'
-        verbose_name_plural = 'Tests'
 
 class Recruitment_Meetings(models.Model):
     ID = models.AutoField(primary_key=True)

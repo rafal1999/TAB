@@ -11,7 +11,6 @@ from django.contrib.auth        import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
-
 def home_page(request):
     if_create=False
     if request.method=="POST":

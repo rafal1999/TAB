@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models        import Workers, Workers_Role, Candidates, Candidates_Role, Tests, Calendar, Recruitment_Meetings
+from .models        import Workers, Workers_Role, Candidates, Candidates_Role, Tests, Calendar, Recruitment_Meetings, Recruitment_Process
 
 # Register your models here.
 
@@ -25,7 +25,8 @@ class Recruitment_Meetings_Admin(admin.ModelAdmin):
 
 class Calendar_Admin(admin.ModelAdmin):
     list_display = [f.name for f in Calendar._meta.fields]
-
+class Recruitment_Process_Admin(admin.ModelAdmin):
+    list_display = [f.name for f in Recruitment_Process._meta.fields]
 
 admin.site.register(Workers,Workers_Admin)
 admin.site.register(Workers_Role,Workers_Role_Admin)
@@ -34,3 +35,4 @@ admin.site.register(Candidates_Role,Candidates_Role_Admin)
 admin.site.register(Tests,Tests_Admin)
 admin.site.register(Calendar,Calendar_Admin)
 admin.site.register(Recruitment_Meetings,Recruitment_Meetings_Admin)
+admin.site.register (Recruitment_Process,Recruitment_Process_Admin) 
