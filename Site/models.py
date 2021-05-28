@@ -137,23 +137,23 @@ class Tests(models.Model):
     class Meta:
         verbose_name = 'test'
         verbose_name_plural = 'Tests'
-#TODO dodać pole daty!!!!
+
 class Recruitment_Meetings(models.Model):
     ID = models.AutoField(primary_key=True)
     Hard_skills = models.TextField(default="",null=True)
     Soft_skills = models.TextField(default="",null=True)
     Grade = models.DecimalField(max_digits = 2, decimal_places = 0, validators=[MaxValueValidator(10),MinValueValidator(0)])
     Notes = models.TextField(default="",null=True)
+    Date = models.DateField(auto_now=False, auto_now_add=True)
     ID_Recruitment_Process = models.ForeignKey("Recruitment_Process", default=None, null=True, verbose_name='Recruitment process' ,on_delete=models.SET_NULL)
     ID_Workers = models.ForeignKey("Workers", default=None,verbose_name='Worker' ,null=True, on_delete=models.SET_NULL)
     class Meta:
         verbose_name = 'meeting'
         verbose_name_plural = 'Recruitment meetings'
         
-#TODO date -> date and time 
 class Calendar(models.Model):
     ID = models.AutoField(primary_key=True)
-    Meeting_date = models.DateField(auto_now=False, auto_now_add=False)
+    Meeting_date = models.DateTimeField(auto_now=False, auto_now_add=False)
     Description = models.TextField(default="",null=True)
     Meeting_type = models.CharField(max_length=1, null=True,default=None, choices=MEETING_TYPE_OPTIONS)    
     ID_Workers = models.ForeignKey("Workers", default=None,verbose_name='Worker' ,null=True, on_delete=models.SET_NULL)
