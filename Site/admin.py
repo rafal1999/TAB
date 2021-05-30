@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models        import Workers, Workers_Role, Candidates, Candidates_Role, Tests, Calendar, Recruitment_Meetings, Recruitment_Process
+from .models        import Workers, Workers_Role, Candidates, Candidates_Role, Tests, Calendar, Recruitment_Meetings, Recruitment_Process, Workers_Form
 
 # Register your models here.
 
 class Workers_Admin(admin.ModelAdmin):
     list_display = [f.name for f in Workers._meta.fields]
+    form = Workers_Form
 
 class Workers_Role_Admin(admin.ModelAdmin):
     list_display = [f.name for f in Workers_Role._meta.fields]

@@ -1,5 +1,8 @@
-from django.db import models
+from django.db              import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.forms           import ModelForm, PasswordInput
+
+
 
 SEX_FEMALE = 'F'
 SEX_MALE = 'M'
@@ -89,12 +92,15 @@ class Candidates(models.Model): #TODO zmienić klucz obcy do Ról kandydatów
 class Recruitment_Process(models.Model):
     ID =models.AutoField(primary_key=True)
     Stage = models.CharField(max_length=1,default='',choices=STAGE_OPTIONS)#choices=[(tag,tag.value) for tag in stage_choice]) 
-    ID_Candidates_Role = models.ForeignKey('Candidates_Role',default=None,null=True, on_delete= models.SET_NULL)
+    ID_Candidates_Role = models.ForeignKey('Candidates_Role',default=None,null=True,verbose_name='Candidate role', on_delete= models.SET_NULL)
     ID_Candidates = models.ForeignKey("Candidates", default=None, null=True, verbose_name='Candidate' ,on_delete=models.SET_NULL)
 
     class Meta:
-        verbose_name = 'Role'
+        verbose_name = 'Process'
         verbose_name_plural = 'Recruitment process'
+
+    def __str__(self):
+        return self.ID_Candidates.Name + ' ' + self.ID_Candidates.Surname + ' ' + self.ID_Candidates_Role.Name 
 
 
 class Workers_Role(models.Model):
@@ -105,7 +111,7 @@ class Workers_Role(models.Model):
         verbose_name = 'Role'
         verbose_name_plural = 'Workers roles'
 
-    def __str__(self): #konieczne jeśli w django admin chemy wybierać po nazwie roli a nie Role_object (1..n)
+    def __str__(self): 
         return self.Name
 
 class Workers(models.Model):
@@ -116,8 +122,7 @@ class Workers(models.Model):
     Login = models.CharField(max_length=32,null=True)
     Password = models.CharField(max_length=32,null=False,default="") #TODO password bo widac hasło w
     Email_address = models.EmailField(max_length=50,null=True)
-    ID_Workers_Role = models.ForeignKey("Workers_Role", default=None, null=True, on_delete=models.SET_NULL)
-
+    ID_Workers_Role = models.ForeignKey("Workers_Role", default=None, null=True, verbose_name='Role' , on_delete=models.SET_NULL)
     class Meta:
         verbose_name = 'worker'
         verbose_name_plural = 'Workers'
@@ -131,8 +136,8 @@ class Tests(models.Model):
     ID = models.AutoField(primary_key=True)
     Points = models.DecimalField(max_digits = 5, decimal_places = 2,validators=[MaxValueValidator(100),MinValueValidator(0)],null=True )
     Check_out_date = models.DateField(auto_now=False, auto_now_add=True) 
-    ID_Recruitment_Process = models.ForeignKey("Recruitment_Process", default=None, null=True, verbose_name='Recruitment process' ,on_delete=models.SET_NULL)
-    ID_Workers =  models.ForeignKey("Workers", default=None, null=True, on_delete=models.SET_NULL)
+    ID_Recruitment_Process = models.OneToOneField("Recruitment_Process", default=None, null=True, verbose_name='Candidate and his role' ,on_delete=models.SET_NULL)
+    ID_Workers =  models.ForeignKey("Workers", default=None, null=True,verbose_name="Worker" ,on_delete=models.SET_NULL)
     
     class Meta:
         verbose_name = 'test'
@@ -150,6 +155,8 @@ class Recruitment_Meetings(models.Model):
     class Meta:
         verbose_name = 'meeting'
         verbose_name_plural = 'Recruitment meetings'
+
+    
         
 class Calendar(models.Model):
     ID = models.AutoField(primary_key=True)
@@ -163,3 +170,14 @@ class Calendar(models.Model):
         verbose_name = 'event'
         verbose_name_plural = 'Calendar'
 
+
+
+
+class Workers_Form(ModelForm):
+
+   class Meta:
+        model = Workers
+        widgets = {
+            'Password': PasswordInput(),
+        }
+        fields = [f.name for f in Workers._meta.fields]
