@@ -11,8 +11,7 @@ from django.contrib.auth        import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
-
-def home_page(request):
+def test_workers_page(request):
     if_create=False
     if request.method=="POST":
         y=int(request.POST['worker_year_of_birth'])
@@ -22,20 +21,29 @@ def home_page(request):
         add_worker(name=request.POST['worker_name'], surname=request.POST['worker_surname'], birthday=date(y,m,d), worker_role=worker_role)
     workers = Workers.objects.all()# tabele się łączą automatycznie jeśli mają powiązanie,
     
-    return render(request,'home.html', {'workers':workers})
+    return render(request,'testworkers.html', {'workers':workers})
 
+# def home_page(request):
+#     return render(request,'home.html')
+
+class Home(View):
+    template = 'home.html'
+    login_url = 'login/'
+
+    def get(self, request):
+        return render(request, self.template)
 
 
 class Index(LoginRequiredMixin,View):
     template = 'index.html'
-    login_url = '/login'
+    login_url = 'login/'
 
     def get(self, request):
         return render(request, self.template) 
 
 class Login(View):
     template = 'login.html'
-    login_url ='/login'
+    login_url ='login/'
 
     def get(self, request):
         form = AuthenticationForm()
@@ -48,7 +56,7 @@ class Login(View):
         user = authenticate(request, username=username, password=password)
         if user is  None:
             login(request, user)
-            return HttpResponse('')
+            return render(request, self.template)
         
         else: 
             return render(request,self.template, {'form':form})

@@ -5,4 +5,5 @@ Site/__pycache__
 Site/migrations/__pycache__
 Site/api/__pycache__
 *.pyc
+db.sqlite3
 
