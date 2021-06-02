@@ -22,4 +22,5 @@ urlpatterns = [
     path('index/', views.Index.as_view(), name='index'),
     path('login/', views.Login.as_view(), name='login'),
     path('admin/', admin.site.urls),
+    path('qbranchtest/', views.Qbranchtest.as_view(), name='Qbranchtest'),
 ]

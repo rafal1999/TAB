@@ -26,6 +26,25 @@ def test_workers_page(request):
 # def home_page(request):
 #     return render(request,'home.html')
 
+class Qbranchtest(View):
+    template = 'qbranchtest.html'
+    login_url = 'login/'
+
+    def post(self, request):
+        y=int(request.POST['worker_year_of_birth'])
+        m=int(request.POST['worker_month_of_birth'])
+        d=int(request.POST['worker_month_of_birth'])
+        worker_role=request.POST['worker_role']
+        workers = Workers.objects.all()
+        add_worker(name=request.POST['worker_name'], surname=request.POST['worker_surname'], birthday=date(y,m,d), worker_role=worker_role)
+        return render(request,'testworkers.html', {'workers':workers})
+
+
+    def get(self, request):
+        workers = Workers.objects.all()
+        return render(request, self.template, {'workers':workers})
+
+
 class Home(View):
     template = 'home.html'
     login_url = 'login/'
