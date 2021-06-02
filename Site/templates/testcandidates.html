@@ -1,0 +1,28 @@
+
+
+<html>
+
+<h1>Add test candidates</h1>
+<form method="POST">
+    <input name="candidate_name" id="id_candidate_name" placeholder="Enter a candidate name"/>
+    {% csrf_token %}
+    <input name="candidate_surname" id="id_candidate_surname" placeholder="Enter a candidate surname"/>  
+    <input name="candidate_year_of_birth" id="id_candidate_year_of_birth" placeholder="Enter a year of birth"/>
+    <input name="candidate_month_of_birth" id="id_candidate_month_of_birth" placeholder="Enter a month of birth"/>
+    <input name="candidate_day_of_birth" id="id_candidate_day_of_birth" placeholder="Enter  day of birth"/>
+    <input name="candidate_day_of_birth" id="id_candidate_day_of_birth" placeholder="Enter r day of birth"/>
+    <input name="candidate_phone_number" id="id_candidate_phone_number" placeholder="Enter a phone number"/>
+    <input name="candidate_sex" id="id_candidate_sex" placeholder="Enter a sex"/>
+    <input name="candidate_email" id="id_candidate_email" placeholder="Enter a candidate_email"/>
+    <button>Add</button> 
+    <!-- button jest konieczy żeby wysłać cały formularz razem w jednej cześci  -->
+</form>
+<center>
+    <table id="id_table">
+        {% for c in candidates%}                                                          <!--odcoywanie się do tabel połaczonych nie wprost przez klucz obcy (taka składnia) c.ID_Workers_Role.Name-->
+        <tr><td>{{c.Name}}</td> <td>{{c.Surname}}</td> <td>{{c.Birthdate}}</td> <td>{{c.Sex}}</td></tr> 
+        {% endfor %}
+    </table>
+</center>
+
+</html>

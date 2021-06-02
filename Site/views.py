@@ -9,6 +9,7 @@ from django.views               import View
 from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth        import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
+from Site.api.candidates        import list_candidates, add_candidate
 # Create your views here.
 
 def test_workers_page(request):
@@ -26,11 +27,27 @@ def test_workers_page(request):
 # def home_page(request):
 #     return render(request,'home.html')
 
+def test_candidates_page(request):
+
+    if request.method=="POST":
+        y=int(request.POST['candidate_year_of_birth'])
+        m=int(request.POST['candidate_month_of_birth'])
+        d=int(request.POST['candidate_month_of_birth'])
+        add_candidate(name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
+                        birthday=date(y,m,d), phone_number=request.POST['candidate_phone_number'],
+                        sex=request.POST['candidate_sex'], email='test@m.com',cv='pass',motivation_letter='pas',
+                        hired='P')
+
+    candidates = list_candidates()
+    
+    return render(request,'testcandidates.html', {'candidates':candidates})
+
+
 class Home(View):
     template = 'home.html'
     login_url = 'login/'
 
-    def get(self, request):
+    def get(self,request):
         return render(request, self.template)
 
 
