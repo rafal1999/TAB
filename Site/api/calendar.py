@@ -1,10 +1,9 @@
 from Site.models import Calendar
-from Site.models import MEETING_STATUS_OPTIONS
 from Site import constants
 
 
 def add_meeting(date, desc:str, meeting_type:str, worker_ids, recruitment_process_id):
-    Calendar.objects.create(Meeting_date=date, Description=desc, Meeting_type=meeting_type, Meeting_status='P', 
+    Calendar.objects.create(Meeting_date=date, Description=desc, Cancel_reason="", Meeting_type=meeting_type, Meeting_status='P', 
                             ID_Workers=worker_ids, ID_Recruitment_Process=recruitment_process_id)
 
 def edit_meeting(meeting_id, date, desc:str, meeting_type:str, worker_ids, recruitment_process_id):

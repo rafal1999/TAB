@@ -20,6 +20,7 @@ urlpatterns = [
     path('', views.Home.as_view(), name='home'),
     path('testworkers/', views.test_workers_page, name='testworkers'),
     path('testcandidates/',views.test_candidates_page, name='testcandidates'),
+    path('testcalendar/', views.test_calendar_page, name='testcalendar'),
     path('index/', views.Index.as_view(), name='index'),
     path('login/', views.Login.as_view(), name='login'),
     path('admin/', admin.site.urls),

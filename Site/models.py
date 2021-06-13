@@ -4,10 +4,6 @@ from django.forms           import ModelForm, PasswordInput
 from Site import constants
 
 
-
-
-
-
 class Candidates_Role(models.Model):
     ID = models.AutoField(primary_key=True)
     Name = models.CharField(default=None,null=False, max_length=25)

@@ -10,6 +10,8 @@ from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth        import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from Site.api.candidates        import list_candidates, add_candidate
+from Site.api.calendar          import add_meeting, list_meetings
+from Site.models                import Workers, Recruitment_Process                
 # Create your views here.
 
 def test_workers_page(request):
@@ -41,6 +43,18 @@ def test_candidates_page(request):
     candidates = list_candidates()
     
     return render(request,'testcandidates.html', {'candidates':candidates})
+
+def test_calendar_page(request):
+    
+    if request.method=="POST":
+        y=int(request.POST['meeting_year'])
+        m=int(request.POST['meeting_month'])
+        d=int(request.POST['meeting_day'])
+        add_meeting(date=date(y,m,d), desc=request.POST['meeting_desc'], meeting_type='R', worker_ids=Workers.objects.all()[0], recruitment_process_id=Recruitment_Process.objects.all()[0])
+
+    meetings = list_meetings()
+    
+    return render(request,'testcalendar.html', {'meetings':meetings})
 
 
 class Home(View):
