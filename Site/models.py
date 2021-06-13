@@ -1,58 +1,11 @@
 from django.db              import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms           import ModelForm, PasswordInput
+from Site import constants
 
 
 
-SEX_FEMALE = 'F'
-SEX_MALE = 'M'
-SEX_UNSURE = 'U'
 
-SEX_OPTIONS = (
-    (SEX_UNSURE, 'Unsure'),
-    (SEX_FEMALE, 'Female'),
-    (SEX_MALE, 'Male'),
-    )
-
-STAGE_ZERO   = '0' # kandydat zgłoszony
-STAGE_FIRST  = '1' # test napisany               #TODO może zmienić na inty w bazie łatwiej sortować??
-STAGE_SECOND = '2' # po rozmowie rekrutacyjnej
-STAGE_THIRD  = '3' # po rozmowie finalnej po której dostaje odp tak/nie 
-
-STAGE_OPTIONS = (     #TODO W miejsca 0,1,2 nadać opisy jakie by były fajne (to co ma się wyświetlać) 
-    (STAGE_ZERO, '0'),      #!
-    (STAGE_FIRST, '1'),     #!
-    (STAGE_SECOND, '2'),    #!
-    (STAGE_THIRD, '3')      #!
-    )
-
-HIRED_YES        = 'Y'
-HIRED_NO         = 'N'
-HIRED_IN_PROCESS = 'P'
-
-HIRED_OPTIONS = (
-    (HIRED_IN_PROCESS, 'In process'),
-    (HIRED_YES, 'Yes'),
-    (HIRED_NO, 'No'),
-    )
-
-PRESENT_YES =  'Y'
-PRESENT_NO = 'N'
-PRESENT_UNKNOWN = 'U'
-
-PRESENT_OPTIONS = (
-    (PRESENT_UNKNOWN, 'Unknown'),
-    (PRESENT_YES, 'Yes'),
-    (PRESENT_NO, 'No'),
-)
-
-MEETING_TYPE_TEST = 'T'
-MEETING_TYPE_JOB_INTERVIEW = 'R'
-
-MEETING_TYPE_OPTIONS = (
-    (MEETING_TYPE_TEST,'Test'),
-    (MEETING_TYPE_TEST,'Job interview'),
-)
 
 
 class Candidates_Role(models.Model):
@@ -74,11 +27,11 @@ class Candidates(models.Model): #TODO zmienić klucz obcy do Ról kandydatów
     Birthdate = models.DateField(auto_now=False, auto_now_add=False)
     Application_date = models.DateField(auto_now=False, auto_now_add=True)
     Phone_number=models.CharField(max_length=13, null=True)
-    Sex = models.CharField(max_length=1, null=True,default=None, choices=SEX_OPTIONS)#=[(tag,tag.value) for tag in sex_choice])
+    Sex = models.CharField(max_length=1, null=True,default=None, choices=constants.SEX_OPTIONS)#=[(tag,tag.value) for tag in sex_choice])
     Email_address = models.EmailField(max_length=50,null=True)
     CV= models.TextField(default="")                                                                                #TODO mozliwa zmiana argumentów gdzy dojdzemy do implemetacji cv
     Motivation_letter = models.TextField(default="")                                                                #TODO mozliwa zmiana argumentów gdzy dojdzemy do implementacji
-    Hired = models.CharField(max_length=10,default='',choices=HIRED_OPTIONS)# choices=[(tag,tag.value) for tag in hired_choice])
+    Hired = models.CharField(max_length=10,default='',choices=constants.HIRED_OPTIONS)# choices=[(tag,tag.value) for tag in hired_choice])
     
     # CV_v2= models.FilePathField(unique=True,path=None, match=None,max_length=200) #TODO trzeba przetestować bardziej wnikliwie 
     
@@ -91,7 +44,7 @@ class Candidates(models.Model): #TODO zmienić klucz obcy do Ról kandydatów
     
 class Recruitment_Process(models.Model):
     ID =models.AutoField(primary_key=True)
-    Stage = models.CharField(max_length=1,default='',choices=STAGE_OPTIONS)#choices=[(tag,tag.value) for tag in stage_choice]) 
+    Stage = models.CharField(max_length=1,default='',choices=constants.STAGE_OPTIONS)#choices=[(tag,tag.value) for tag in stage_choice]) 
     ID_Candidates_Role = models.ForeignKey('Candidates_Role',default=None,null=True,verbose_name='Candidate role', on_delete= models.SET_NULL)
     ID_Candidates = models.ForeignKey("Candidates", default=None, null=True, verbose_name='Candidate' ,on_delete=models.SET_NULL)
 
@@ -162,9 +115,11 @@ class Calendar(models.Model):
     ID = models.AutoField(primary_key=True)
     Meeting_date = models.DateTimeField(auto_now=False, auto_now_add=False)
     Description = models.TextField(default="",null=True)
-    Meeting_type = models.CharField(max_length=1, null=True,default=None, choices=MEETING_TYPE_OPTIONS)    
-    ID_Workers = models.ForeignKey("Workers", default=None,verbose_name='Worker' ,null=True, on_delete=models.SET_NULL)
-    ID_Recruitment_Process = models.ForeignKey("Recruitment_Process", default=None, null=True, verbose_name='Recruitment process' ,on_delete=models.SET_NULL)
+    Cancel_reason = models.TextField(default="", null=True)
+    Meeting_type = models.CharField(max_length=1, null=True,default=None, choices=constants.MEETING_TYPE_OPTIONS)
+    Meeting_status = models.CharField(max_length=1, null=False,default='U', choices=constants.MEETING_STATUS_OPTIONS)
+    ID_Workers = models.ForeignKey("Workers", default=None,verbose_name='Worker', null=True, on_delete=models.SET_NULL)
+    ID_Recruitment_Process = models.ForeignKey("Recruitment_Process", default=None, null=True, verbose_name='Recruitment process', on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name = 'event'
