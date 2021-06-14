@@ -3,7 +3,7 @@ from django.http                import HttpResponse
 # from django.db.models.functions import Concat 
 # from django.db.models           import F, Value
 from Site.models                import Candidates, Workers, Workers_Role 
-from datetime                   import date
+from datetime                   import date, datetime
 from Site.api.workers           import add_worker
 from django.views               import View
 from django.contrib.auth.forms  import AuthenticationForm
@@ -47,15 +47,13 @@ def test_candidates_page(request):
 def test_calendar_page(request):
     
     if request.method=="POST":
-        y=int(request.POST['meeting_year'])
-        m=int(request.POST['meeting_month'])
-        d=int(request.POST['meeting_day'])
-        add_meeting(date=date(y,m,d), desc=request.POST['meeting_desc'], meeting_type='R', worker_ids=Workers.objects.all()[0], recruitment_process_id=Recruitment_Process.objects.all()[0])
+        myDate = request.POST['date']
 
+        add_meeting(date=datetime.strptime(myDate, "%d/%m/%Y %H:%M"), desc=request.POST['meeting_desc'], 
+                    meeting_type='R', worker_ids=Workers.objects.all()[0], recruitment_process_id=Recruitment_Process.objects.all()[0])
     meetings = list_meetings()
     
     return render(request,'testcalendar.html', {'meetings':meetings})
-
 
 class Home(View):
     template = 'home.html'

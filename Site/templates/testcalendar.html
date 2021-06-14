@@ -7,16 +7,14 @@
     {% csrf_token %}
 
     <input name="meeting_desc" id="id_meeting_desc" placeholder="Description" />
-    <input name="meeting_year" id="id_meeting_year" placeholder="Meeting year" />
-    <input name="meeting_month" id="id_meeting_month" placeholder="Meeting month" />
-    <input name="meeting_day" id="id_meeting_day" placeholder="Meeting day" />
+    <input name="date" id="id_date" placeholder="Date" />
     <button>Add</button>
 
 </form>
 <center>
     <table id="id_table">
         {% for c in meetings %}     
-        <tr><td>{{c.Date}}</td> <td>{{c.Description}}</td></tr>
+        <tr><td>{{c.ID}}</td><td>{{c.Meeting_date}}</td> <td>{{c.Description}}</td></tr>
         {% endfor %}
     </table>
 </center>

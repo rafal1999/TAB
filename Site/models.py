@@ -105,8 +105,6 @@ class Recruitment_Meetings(models.Model):
         verbose_name = 'meeting'
         verbose_name_plural = 'Recruitment meetings'
 
-    
-        
 class Calendar(models.Model):
     ID = models.AutoField(primary_key=True)
     Meeting_date = models.DateTimeField(auto_now=False, auto_now_add=False)
