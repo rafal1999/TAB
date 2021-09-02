@@ -1,0 +1,88 @@
+{% extends 'base.html' %} <-- inherit the general template
+{% load static %}
+ 
+{% block content %}
+<div class= "row">
+    <div class="col-sm">
+    <button id="addRow">Add new row</button>
+        <table id="table_db" class="table table-bordered table-hover" style="width: 100%">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody >
+                {% for k, v in data.projects_dict %}
+                <tr>
+                    <td> {{ k }}</td>
+                    <td> {{ v }}</td>
+                    <td> {{ v }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>  
+        </table>
+    </div>
+</div>
+
+<h1 id="xd"></h1>
+
+{% endblock content %}
+ 
+{% block js %} <-- page specific scripts
+  
+ <script>
+    var data = [
+{% for c in meetings %}
+    "{{ c.Description }}"
+{% endfor %}
+]
+</script>
+ 
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+ 
+<script>
+    
+    $(document).ready(function () {
+    var t = $('#table_db').DataTable( {
+        "paging": true,
+        "searching": true,
+        "autoWidth": false,
+        "ordering": true,
+        "columnDefs": [
+            {"width": "130px", "targets": 0},
+            {"width": "200px", "targets": 1},
+            {"width": "200px", "targets": 3},
+        ],
+    }
+    );
+
+ 
+    $('#addRow').on( 'click', function () {
+        t.row.add( [
+            '02.09.2021 16:00',
+            'Rozmowa kwalifikacyjna',
+            'Rozmowa z kandydatem',
+            'Potwierdzone'
+        ] ).draw( false );
+    } );
+ 
+} );
+</script>
+
+{% for c in meetings %}   
+        <script>
+            var t = $('#table_db')//.DataTable();
+            t.row.add( [
+            '02.09.2021 16:00',
+            'Rozmowa kwalifikacyjna',
+            'Rozmowa z kandydatem',
+            'Potwierdzone'
+        ] ).draw( false );
+        </script>
+{% endfor %}
+ 
+{% endblock js %}

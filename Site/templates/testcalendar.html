@@ -1,4 +1,10 @@
+{% load static %}
 
+<link
+    rel="stylesheet"
+    type="text/css"
+    href=" {% static 'home/css/bootstrap.css' %}"
+/>
 
 <html>
 
@@ -14,7 +20,9 @@
 <center>
     <table id="id_table">
         {% for c in meetings %}     
-        <tr><td>{{c.ID}}</td><td>{{c.Meeting_date}}</td> <td>{{c.Description}}</td></tr>
+        <tr><td>{{c.ID}}</td><td>{{c.Meeting_date}}</td> <td>{{c.Description}}</td>
+        <td><button type="button" class="btn btn-secondary btn-sm">Edytuj</button></td>
+        <td><button type="button" class="btn btn-secondary btn-sm">Usuń</button></td></tr>
         {% endfor %}
     </table>
 </center>

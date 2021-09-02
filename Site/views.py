@@ -11,7 +11,8 @@ from django.contrib.auth        import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from Site.api.candidates        import list_candidates, add_candidate
 from Site.api.calendar          import add_meeting, list_meetings
-from Site.models                import Workers, Recruitment_Process                
+from Site.models                import Workers, Recruitment_Process 
+from django                     import forms               
 # Create your views here.
 
 def test_workers_page(request):
@@ -48,12 +49,13 @@ def test_calendar_page(request):
     
     if request.method=="POST":
         myDate = request.POST['date']
-
+        
         add_meeting(date=datetime.strptime(myDate, "%d/%m/%Y %H:%M"), desc=request.POST['meeting_desc'], 
                     meeting_type='R', worker_ids=Workers.objects.all()[0], recruitment_process_id=Recruitment_Process.objects.all()[0])
     meetings = list_meetings()
+    f = forms.DateField()
     
-    return render(request,'testcalendar.html', {'meetings':meetings})
+    return render(request,'testcalendar.html', {'meetings':meetings, 'form':f})
 
 class Home(View):
     template = 'home.html'
@@ -63,7 +65,7 @@ class Home(View):
         return render(request, self.template)
 
 
-class Index(LoginRequiredMixin,View):
+class Index(View):
     template = 'index.html'
     login_url = 'login/'
 
@@ -89,3 +91,11 @@ class Login(View):
         
         else: 
             return render(request,self.template, {'form':form})
+
+class calendar(View):
+    template = 'calendar.html'
+    login_url = 'login/'
+
+    def get(self, request):
+        meetings = list_meetings()
+        return render(request, self.template, {'meetings':meetings}) 
