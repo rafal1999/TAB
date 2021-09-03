@@ -27,4 +27,10 @@ urlpatterns = [
     path('login/', views.Login.as_view(), name='login'),
     path('admin/', admin.site.urls),
     path('calendar/', views.calendar.as_view(), name='calendar'),
+    path('calendar/edit/<int:id>', views.edit_meeting, name='editmeeting'),
+    path('calendar/confirm/<int:id>', views.confirm_meeting, name='confirmmeeting'),
+    path('calendar/cancel/<int:id>/<str:desc>', views.cancel_meeting, name='cancelmeeting'),
+    path('calendar/delete/<int:id>', views.delete_meeting, name='deletemeeting'),
+    path('calendar/create/', views.create_meeting, name='createmeeting'),
+
 ]

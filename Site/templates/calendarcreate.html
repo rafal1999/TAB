@@ -1,0 +1,22 @@
+{% load static %}
+
+<link
+    rel="stylesheet"
+    type="text/css"
+    href=" {% static 'home/css/bootstrap.css' %}"
+/>
+
+<html>
+
+<h1>Nowe spotkanie</h1>
+MEETING_TYPE_TEST = 'T'
+MEETING_TYPE_JOB_INTERVIEW = 'R'
+<form method="POST">
+    {% csrf_token %}
+    <input name="meeting_desc" id="id_meeting_desc" placeholder="Opis"/>
+    <input name="date" id="id_date" placeholder="Data" value="01/01/2021 00:00"/>
+    <input name="meeting_type" id="id_meeting_type" placeholder="Typ"/>
+    <button>Zatwierdź</button>
+</form>
+
+</html>

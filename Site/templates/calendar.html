@@ -1,51 +1,103 @@
-{% extends 'base.html' %} <-- inherit the general template
+{% extends 'base.html' %}
 {% load static %}
  
 {% block content %}
+
 <div class= "row">
     <div class="col-sm">
-    <button id="addRow">Add new row</button>
         <table id="table_db" class="table table-bordered table-hover" style="width: 100%">
             <thead>
                 <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Description</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Typ</th>
+                    <th scope="col">Opis</th>
                     <th scope="col">Status</th>
                 </tr>
             </thead>
             <tbody >
-                {% for k, v in data.projects_dict %}
-                <tr>
-                    <td> {{ k }}</td>
-                    <td> {{ v }}</td>
-                    <td> {{ v }}</td>
-                </tr>
+                {% for c in meetings %}
+                    <tr onclick="select({{c.ID}})"> <td>{{c.Meeting_date}}</td><td>{% if c.Meeting_type == "R" %}Rozmowa kwalifikacyjna{% else %}Test{% endif %}
+                    </td> <td>{{c.Description}}</td><td>{% if c.Meeting_status == "P" %} Oczekujące 
+                    {% elif c.Meeting_status == "C" %} Anulowane  - Powód: {{c.Cancel_reason}} {% else %} Potwierdzone {% endif %}</td></tr>
                 {% endfor %}
-            </tbody>  
+            </tbody> 
         </table>
     </div>
 </div>
 
-<h1 id="xd"></h1>
+<p hidden id="curr"></p>
+
+<button id="bCreate" onclick="Create()">Utwórz</button>
+<button id="bEdit" onclick="edit()">Edytuj</button>
+<button id="bDelete" onclick="Delete()">Usuń</button>
+<button id="bConfirm" onclick="Confirm()">Potwierdź</button>
+<p></p>
+<input name="meeting_desc" id="id_meeting_desc" placeholder="Powód"/>
+<button id="bCancel" onclick="cancel()">Odrzuć</button>
 
 {% endblock content %}
  
-{% block js %} <-- page specific scripts
-  
- <script>
-    var data = [
-{% for c in meetings %}
-    "{{ c.Description }}"
-{% endfor %}
-]
-</script>
+{% block js %}
  
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+    function select(pk) {
+       document.getElementById('curr').innerHTML = pk;
+    }
+</script>
+
+<script>
+    function Create()
+    {
+        window.location.href = "create/";
+    }
+</script>
+
+<script>
+    function Confirm()
+    {
+        curr = document.getElementById('curr').innerHTML;
+        if (curr == 0)
+            return;
+        window.location.href = "confirm/" + document.getElementById('curr').innerHTML;
+    }
+</script>
+
+<script>
+    function cancel()
+    {
+        curr = document.getElementById('curr').innerHTML;
+        reason = document.getElementById('id_meeting_desc').value;
+        if (curr == 0 || reason == "")
+            return;
+        window.location.href = "cancel/" + curr + "/" + reason;
+    }
+</script>
+
+<script>
+    function edit()
+    {
+        curr = document.getElementById('curr').innerHTML;
+        if (curr == 0)
+            return;
+        window.location.href = "edit/" + document.getElementById('curr').innerHTML;
+    }
+</script>
+
+<script>
+    function Delete()
+    {
+        curr = document.getElementById('curr').innerHTML;
+        if (curr == 0)
+            return;
+        confirm("Czy na pewno chcesz usunąć spotkanie?");
+        window.location.href = "delete/" + document.getElementById('curr').innerHTML;
+    }
+</script>
  
 <script>
-    
     $(document).ready(function () {
     var t = $('#table_db').DataTable( {
         "paging": true,
@@ -53,36 +105,27 @@
         "autoWidth": false,
         "ordering": true,
         "columnDefs": [
-            {"width": "130px", "targets": 0},
+            {"width": "180px", "targets": 0},
             {"width": "200px", "targets": 1},
-            {"width": "200px", "targets": 3},
+            {"width": "600px", "targets": 3},
         ],
-    }
-    );
+        "order": [[0, "desc"]]
+    });
 
- 
-    $('#addRow').on( 'click', function () {
-        t.row.add( [
-            '02.09.2021 16:00',
-            'Rozmowa kwalifikacyjna',
-            'Rozmowa z kandydatem',
-            'Potwierdzone'
-        ] ).draw( false );
-    } );
- 
-} );
+    $('#table_db tbody').on( 'click', 'tr', function () {
+        if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+        }
+        else {
+            t.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+    $('#bDelete').click( function () {
+        t.row('.selected').remove().draw( false );
+    });
+});
 </script>
-
-{% for c in meetings %}   
-        <script>
-            var t = $('#table_db')//.DataTable();
-            t.row.add( [
-            '02.09.2021 16:00',
-            'Rozmowa kwalifikacyjna',
-            'Rozmowa z kandydatem',
-            'Potwierdzone'
-        ] ).draw( false );
-        </script>
-{% endfor %}
  
 {% endblock js %}

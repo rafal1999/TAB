@@ -1,4 +1,4 @@
-from django.shortcuts           import render
+from django.shortcuts           import redirect, render
 from django.http                import HttpResponse  
 # from django.db.models.functions import Concat 
 # from django.db.models           import F, Value
@@ -10,7 +10,7 @@ from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth        import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from Site.api.candidates        import list_candidates, add_candidate
-from Site.api.calendar          import add_meeting, list_meetings
+import Site.api.calendar        as Calendar
 from Site.models                import Workers, Recruitment_Process 
 from django                     import forms               
 # Create your views here.
@@ -50,12 +50,49 @@ def test_calendar_page(request):
     if request.method=="POST":
         myDate = request.POST['date']
         
-        add_meeting(date=datetime.strptime(myDate, "%d/%m/%Y %H:%M"), desc=request.POST['meeting_desc'], 
+        Calendar.add_meeting(date=datetime.strptime(myDate, "%d/%m/%Y %H:%M"), desc=request.POST['meeting_desc'], 
                     meeting_type='R', worker_ids=Workers.objects.all()[0], recruitment_process_id=Recruitment_Process.objects.all()[0])
-    meetings = list_meetings()
+    meetings = Calendar.list_meetings()
     f = forms.DateField()
     
     return render(request,'testcalendar.html', {'meetings':meetings, 'form':f})
+
+def create_meeting(request):
+    if request.method=="POST":
+        myDate = request.POST['date']
+        
+        Calendar.add_meeting(date=datetime.strptime(myDate, "%d/%m/%Y %H:%M"), desc=request.POST['meeting_desc'], 
+                    meeting_type=request.POST['meeting_type'], worker_ids=Workers.objects.all()[0], recruitment_process_id=Recruitment_Process.objects.all()[0])
+        response = redirect('/calendar/')
+        return response
+    f = forms.DateField()
+    f2 = forms.ChoiceField()
+    return render(request, 'calendarcreate.html')
+
+def edit_meeting(request, id):
+    if request.method=="POST":
+        myDate = request.POST['date']
+        
+        Calendar.edit_meeting(meeting_id = id, date=datetime.strptime(myDate, "%d/%m/%Y %H:%M"), desc=request.POST['meeting_desc'], 
+                    meeting_type=request.POST['meeting_type'], worker_ids=Workers.objects.all()[0], recruitment_process_id=Recruitment_Process.objects.all()[0])
+    meeting = Calendar.get_meeting(id)
+    f = forms.DateField()
+    return render(request, 'calendaredit.html', {'meeting':meeting})
+
+def delete_meeting(request, id):
+    Calendar.delete_meeting(id)
+    response = redirect('/calendar/')
+    return response
+
+def confirm_meeting(request, id):
+    Calendar.confirm_meeting(id)
+    response = redirect('/calendar/')
+    return response
+
+def cancel_meeting(request, id, desc):
+    Calendar.cancel_meeting(id, desc)
+    response = redirect('/calendar/')
+    return response
 
 class Home(View):
     template = 'home.html'
@@ -97,5 +134,6 @@ class calendar(View):
     login_url = 'login/'
 
     def get(self, request):
-        meetings = list_meetings()
-        return render(request, self.template, {'meetings':meetings}) 
+        meetings = Calendar.list_meetings()
+        selected = 0
+        return render(request, self.template, {'meetings':meetings, 'selected':selected}) 
