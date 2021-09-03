@@ -3,8 +3,9 @@ from django.http                import HttpResponse
 # from django.db.models.functions import Concat 
 # from django.db.models           import F, Value
 from Site.models                import Candidates, Workers, Workers_Role 
-from datetime                   import date
+from datetime                   import date, datetime
 from Site.api.workers           import add_worker
+from Site.api.candidates        import edit_candidate
 from django.views               import View
 from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth        import login, authenticate
@@ -43,12 +44,15 @@ def test_candidates_page(request):
     return render(request,'testcandidates.html', {'candidates':candidates})
 
 
+
+
+
 class Home(View):
     template = 'home.html'
     login_url = 'login/'
 
-    def get(self,request):
-        return render(request, self.template)
+    def get(self,request,id_test):
+        return render(request, self.template,{'test':{'id_test':id_test}})
 
 
 class Index(LoginRequiredMixin,View):
@@ -58,22 +62,25 @@ class Index(LoginRequiredMixin,View):
     def get(self, request):
         return render(request, self.template) 
 
-class Login(View):
-    template = 'login.html'
-    login_url ='login/'
 
-    def get(self, request):
-        form = AuthenticationForm()
-        return render(request, self.template,{'form': form})
-    
-    def post(self, request):
-        form = AuthenticationForm(request.POST)
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is  None:
-            login(request, user)
-            return render(request, self.template)
-        
-        else: 
-            return render(request,self.template, {'form':form})
+
+
+def edit_candidate_page(request,id_candidate):
+
+    if(request.method=='POST'):
+        edit_candidate(id=id_candidate,name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
+                        birthday=request.POST['candidate_birthdate'], phone_number=request.POST['candidate_phone_number'],
+                        sex=request.POST['candidate_sex'], email=request.POST['candidate_email'],
+                        cv=request.POST['candidate_cv'],motivation_letter=request.POST['candidate_motivation_letter'],)
+        candidate=Candidates.objects.get(ID=id_candidate)
+        print(candidate.Birthdate)
+        print(type(candidate.Birthdate))
+        candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d") 
+        print(type(candidate.Birthdate))
+        print(f"_{candidate.Birthdate}_ {type(candidate.Birthdate)}") 
+        return render(request,'editcandidate.html',{'candidate':candidate})
+
+    # if(request.method=='PUT'):
+    candidate=Candidates.objects.get(ID=id_candidate)
+    candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d")
+    return render(request,'editcandidate.html',{'candidate':candidate})

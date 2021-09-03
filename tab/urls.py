@@ -17,10 +17,10 @@ from django.contrib import admin
 from django.urls import path
 from Site.views import views
 urlpatterns = [
-    path('', views.Home.as_view(), name='home'),
+    path('<int:id_test>', views.Home.as_view(), name='home'),
     path('testworkers/', views.test_workers_page, name='testworkers'),
     path('testcandidates/',views.test_candidates_page, name='testcandidates'),
     path('index/', views.Index.as_view(), name='index'),
-    path('login/', views.Login.as_view(), name='login'),
     path('admin/', admin.site.urls),
+    path('editcandidate/<int:id_candidate>', views.edit_candidate_page)
 ]

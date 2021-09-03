@@ -1,0 +1,69 @@
+<html>
+
+<h1>edit candidates</h1>
+
+<center>
+
+
+
+    <form method="POST">
+            {% csrf_token %}
+     <table>
+  <tr>
+    <th>Name:</th>
+    <th><input name="candidate_name" id="id_worker_name" value="{{candidate.Name}}"/></th>
+    <td>Lastname</td>
+    <td>Age</td>
+  </tr>
+  <tr>
+    <th>Surname:</th>
+    <th><input name="candidate_surname" id="id_worker_name" value="{{candidate.Surname}}"/></th>
+    <td>Lastname</td>
+    <td>Age</td>
+  </tr>
+  <tr>
+    <th>Birthdate:</th>
+    <th><input type="date"  name="candidate_birthdate" id="id_worker_name" value="{{candidate.Birthdate}}"/></th>
+    <td>Lastname</td>
+    <td>Age</td>
+  </tr>
+  <tr>
+    <th>Phone number:</th>
+    <th><input name="candidate_phone_number" id="id_worker_name" value="{{candidate.Phone_number}}"/></th>
+    <td>Lastname</td>
+    <td>Age</td>
+  </tr>
+  <tr>
+    <th>Sex:</th>
+    <th><input name="candidate_sex" id="id_worker_name" value="{{candidate.Sex}}"/></th>
+    <td>Lastname</td>
+    <td>Age</td>
+  </tr>
+  <tr>
+    <th>E-mail:</th>
+    <th><input name="candidate_email" id="id_worker_name" value="{{candidate.Email_address}}"/></th>
+    <td>Lastname</td>
+    <td>Age</td>
+  </tr>
+  <tr>
+    <th>CV:</th>
+    <th><input name="candidate_cv" id="id_worker_name" value="{{candidate.CV}}"/></th>
+    <td>Lastname</td>
+    <td>Age</td>
+  </tr>
+  <tr>
+    <th>Motivation letter:</th>
+    <th><input name="candidate_motivation_letter" id="id_worker_name" value="{{candidate.Motivation_letter}}"/></th>
+    <td>Lastname</td>
+    <td>Age</td>
+  </tr>
+</table> 
+  <button>save</button>
+ </form>
+ <form  method="PUT" action='/editcandidate/{{candidate.ID}}'>
+    <button>Reload</button>
+  </form>
+ 
+</center>
+
+</html>
