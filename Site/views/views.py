@@ -1,8 +1,8 @@
-from django.shortcuts           import render
+from django.shortcuts           import render, redirect 
 from django.http                import HttpResponse  
 # from django.db.models.functions import Concat 
 # from django.db.models           import F, Value
-from Site.models                import Candidates, Workers, Workers_Role 
+from Site.models                import Candidates, Workers, Workers_Role, Recruitment_Meetings,Recruitment_Process, Candidates_Role
 from datetime                   import date, datetime
 from Site.api.workers           import add_worker
 from Site.api.candidates        import edit_candidate
@@ -11,6 +11,7 @@ from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth        import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from Site.api.candidates        import list_candidates, add_candidate
+from Site.api.interview         import add_interview_data, check_if_interview_took_place
 # Create your views here.
 
 def test_workers_page(request):
@@ -84,3 +85,30 @@ def edit_candidate_page(request,id_candidate):
     candidate=Candidates.objects.get(ID=id_candidate)
     candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d")
     return render(request,'editcandidate.html',{'candidate':candidate})
+
+def edit_interview_data(request,id_process):
+
+    if (check_if_interview_took_place(id_process=id_process)):
+        return redirect(f'interview_summary/{id_process}')
+   
+    if(request.method=='POST'):
+        add_interview_data(id_process=id_process, id_worker=1, hard_skils=request.POST['hard_skils'], 
+                            soft_skils=request.POST["soft_skils"], grade=request.POST["grade"], notes=request.POST['notes']) 
+        return redirect(f'interview_summary/{id_process}')
+
+    process = Recruitment_Process.objects.get(ID=id_process)
+    candidate=Candidates.objects.get(ID=process.ID_Candidates.ID)
+    role = Candidates_Role.objects.get(ID=process.ID_Candidates_Role.ID)
+
+    return render(request, 'interview.html',{'candidate':candidate,'role':role})
+
+
+def interview_summary(request, id_process):
+
+    process = Recruitment_Process.objects.get(ID=id_process)
+    candidate=Candidates.objects.get(ID=process.ID_Candidates.ID)
+    role = Candidates_Role.objects.get(ID=process.ID_Candidates_Role.ID)   
+    interview_data = Recruitment_Meetings.objects.get(ID_Recruitment_Process=process)
+    
+    return render(request,"interview_summary.html",{'candidate':candidate,'role':role,
+                'interview_data': interview_data})

@@ -1,4 +1,4 @@
-from Site.models import Candidates
+from Site.models import Candidates, Recruitment_Meetings
 
 
 
@@ -17,6 +17,8 @@ def edit_candidate(id,name,surname,birthday,phone_number,sex,email,cv,
     Candidates.objects.filter(ID=id).update(Name=name,Surname=surname,Birthdate=birthday,
                                 Phone_number=phone_number,Sex=sex,CV=cv,
                                 Motivation_letter=motivation_letter)
+
+
 
 def list_candidates():
     return Candidates.objects.all()  
