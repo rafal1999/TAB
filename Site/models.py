@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db              import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms           import ModelForm, PasswordInput
@@ -39,7 +40,7 @@ class Candidates(models.Model): #TODO zmienić klucz obcy do Ról kandydatów
         return self.Name +' '+ self.Surname
     
 class Recruitment_Process(models.Model):
-    ID =models.AutoField(primary_key=True)
+    ID = models.AutoField(primary_key=True)
     Stage = models.CharField(max_length=1,default='',choices=constants.STAGE_OPTIONS)#choices=[(tag,tag.value) for tag in stage_choice]) 
     ID_Candidates_Role = models.ForeignKey('Candidates_Role',default=None,null=True,verbose_name='Candidate role', on_delete= models.SET_NULL)
     ID_Candidates = models.ForeignKey("Candidates", default=None, null=True, verbose_name='Candidate' ,on_delete=models.SET_NULL)
@@ -49,7 +50,7 @@ class Recruitment_Process(models.Model):
         verbose_name_plural = 'Recruitment process'
 
     def __str__(self):
-        return self.ID_Candidates.Name + ' ' + self.ID_Candidates.Surname + ' ' + self.ID_Candidates_Role.Name 
+        return str(self.ID_Candidates.Name + ' ' + self.ID_Candidates.Surname + ' ' + self.ID_Candidates_Role.Name)
 
 
 class Workers_Role(models.Model):
@@ -68,10 +69,9 @@ class Workers(models.Model):
     Name = models.CharField(default="",null=True, max_length=25)
     Surname = models.CharField(default="",null=True, max_length=25)
     Birthdate = models.DateField(auto_now=False, auto_now_add=False,null=True)
-    Login = models.CharField(max_length=32,null=True)
-    Password = models.CharField(max_length=32,null=False,default="") #TODO password bo widac hasło w
     Email_address = models.EmailField(max_length=50,null=True)
     ID_Workers_Role = models.ForeignKey("Workers_Role", default=None, null=True, verbose_name='Role' , on_delete=models.SET_NULL)
+    ID_User = models.ForeignKey(User, default=None, null=True, on_delete=models.SET_NULL)
     class Meta:
         verbose_name = 'worker'
         verbose_name_plural = 'Workers'
@@ -119,8 +119,7 @@ class Calendar(models.Model):
         verbose_name = 'event'
         verbose_name_plural = 'Calendar'
 
-
-
+        
 
 class Workers_Form(ModelForm):
 

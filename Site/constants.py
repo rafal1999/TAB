@@ -8,12 +8,12 @@ SEX_OPTIONS = (
     (SEX_MALE, 'Male'),
     )
 
-STAGE_ZERO   = '0' # kandydat zg³oszony
-STAGE_FIRST  = '1' # test napisany               #TODO mo¿e zmieniæ na inty w bazie ³atwiej sortowaæ??
+STAGE_ZERO   = '0' # kandydat zgï¿½oszony
+STAGE_FIRST  = '1' # test napisany               #TODO moï¿½e zmieniï¿½ na inty w bazie ï¿½atwiej sortowaï¿½??
 STAGE_SECOND = '2' # po rozmowie rekrutacyjnej
-STAGE_THIRD  = '3' # po rozmowie finalnej po której dostaje odp tak/nie 
+STAGE_THIRD  = '3' # po rozmowie finalnej po ktï¿½rej dostaje odp tak/nie 
 
-STAGE_OPTIONS = (     #TODO W miejsca 0,1,2 nadaæ opisy jakie by by³y fajne (to co ma siê wyœwietlaæ) 
+STAGE_OPTIONS = (     #TODO W miejsca 0,1,2 nadaï¿½ opisy jakie by byï¿½y fajne (to co ma siï¿½ wyï¿½wietlaï¿½) 
     (STAGE_ZERO, '0'),      #!
     (STAGE_FIRST, '1'),     #!
     (STAGE_SECOND, '2'),    #!
@@ -45,7 +45,7 @@ MEETING_TYPE_JOB_INTERVIEW = 'R'
 
 MEETING_TYPE_OPTIONS = (
     (MEETING_TYPE_TEST,'Test'),
-    (MEETING_TYPE_TEST,'Job interview'),
+    (MEETING_TYPE_JOB_INTERVIEW,'Job interview'),
 )
 
 MEETING_STATUS_PLANNED = 'P'

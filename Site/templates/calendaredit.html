@@ -8,25 +8,30 @@
 
 <html>
 
-<h1>Poprawione dane</h1>
-MEETING_TYPE_TEST = 'T'
-MEETING_TYPE_JOB_INTERVIEW = 'R'
+<h1>Editing meeting</h1>
+    <table id="id_table">
+        <tr><td>Date: {{meeting.Meeting_date}}</td><td>Desc: {{meeting.Description}}</td><td>Type: {{meeting.Meeting_type}}</td><td>Worker: {{ worker.Name }} {{ worker.Surname }}</td></tr>
+    </table>
+
 <form method="POST">
     {% csrf_token %}
-    <input name="meeting_desc" id="id_meeting_desc" placeholder="Opis" value="{{meeting.Description}}"/>
-    <input name="date" id="id_date" placeholder="Data" value="{{meeting.Meeting_date|date:'d/m/Y H:i'}}"/>
-    <input name="meeting_type" id="id_meeting_type" placeholder="Typ" value="{{meeting.Meeting_type}}"/>
-    <button>Zatwierdź</button>
+    <br>Description</br>
+    <input name="meeting_desc" id="id_meeting_desc" placeholder="Description" value="{{meeting.Description}}"/>
+    <br>Date</br> 
+    {{ tf.Meeting_date }}
+    <br>Type</br>
+    {{ tf.Meeting_type }}
+    <br>Worker</br>
+    <select name="workers" id="workers">
+    {% for w in workers %}
+      <option>{{w.Name}} {{w.Surname}}</option>
+    {% endfor %}
+    </select>
+    <br></br>
+    <button>Submit</button>
+</form> 
 
-</form>
-
-<button onclick="Return()">Powrót</button>
-<center>
-    Edited meeting
-    <table id="id_table">
-        <tr><td>Data: {{meeting.Meeting_date}}</td><td>Opis: {{meeting.Description}}</td><td>Typ: {{meeting.Meeting_type}}</td></tr>
-    </table>
-</center>
+<button onclick="Return()">Return</button>
 
 </html>
 

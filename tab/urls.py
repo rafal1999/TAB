@@ -25,6 +25,7 @@ urlpatterns = [
     path('testcalendar/', views.test_calendar_page, name='testcalendar'),
     path('index/', views.Index.as_view(), name='index'),
     path('login/', views.Login.as_view(), name='login'),
+    path('logout/', views.log_out, name='logout'),
     path('admin/', admin.site.urls),
     path('calendar/', views.calendar.as_view(), name='calendar'),
     path('calendar/edit/<int:id>', views.edit_meeting, name='editmeeting'),

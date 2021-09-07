@@ -8,15 +8,24 @@
 
 <html>
 
-<h1>Nowe spotkanie</h1>
-MEETING_TYPE_TEST = 'T'
-MEETING_TYPE_JOB_INTERVIEW = 'R'
+<h1>New meeting</h1>
+
 <form method="POST">
     {% csrf_token %}
-    <input name="meeting_desc" id="id_meeting_desc" placeholder="Opis"/>
-    <input name="date" id="id_date" placeholder="Data" value="01/01/2021 00:00"/>
-    <input name="meeting_type" id="id_meeting_type" placeholder="Typ"/>
-    <button>Zatwierdź</button>
+    <br>Description</br>
+    <input name="meeting_desc" id="id_meeting_desc" placeholder="Opis" value="{{meeting.Description}}"/>
+    <br>Date</br> 
+    {{ tf.Meeting_date }}
+    <br>Type</br>
+    {{ tf.Meeting_type }}
+    <br>Worker</br>
+    <select name="workers" id="workers">
+    {% for w in workers %}
+      <option>{{w.Name}} {{w.Surname}}</option>
+    {% endfor %}
+    </select>
+    <br></br>
+    <button>Submit</button>
 </form>
 
 </html>

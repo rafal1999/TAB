@@ -8,17 +8,22 @@
         <table id="table_db" class="table table-bordered table-hover" style="width: 100%">
             <thead>
                 <tr>
-                    <th scope="col">Data</th>
-                    <th scope="col">Typ</th>
-                    <th scope="col">Opis</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Description</th>
+                    {%if worker.ID_Workers_Role.Name == "Assistant"%}
+                    <th scope="col">Worker</th>
+                    {%endif%}
                     <th scope="col">Status</th>
                 </tr>
             </thead>
             <tbody >
                 {% for c in meetings %}
-                    <tr onclick="select({{c.ID}})"> <td>{{c.Meeting_date}}</td><td>{% if c.Meeting_type == "R" %}Rozmowa kwalifikacyjna{% else %}Test{% endif %}
-                    </td> <td>{{c.Description}}</td><td>{% if c.Meeting_status == "P" %} Oczekujące 
-                    {% elif c.Meeting_status == "C" %} Anulowane  - Powód: {{c.Cancel_reason}} {% else %} Potwierdzone {% endif %}</td></tr>
+                    {% if worker.ID_Workers_Role.Name == "Assistant" or c.ID_Workers.ID == worker.ID %}
+                        <tr onclick="select({{c.ID}})"> <td>{{c.Meeting_date}}</td><td>{% if c.Meeting_type == "R" %}Job Interview{% else %}Test{% endif %}
+                        </td> <td>{{c.Description}}</td>{%if worker.ID_Workers_Role.Name == "Assistant"%}<td>{{c.ID_Workers}}</td>
+                        {%endif%}<td>{% if c.Meeting_status == "P" %} Pending {% elif c.Meeting_status == "C" %} Cancelled - reason: {{c.Cancel_reason}} {% else %} Confirmed {% endif %}</td></tr>
+                    {% endif %}
                 {% endfor %}
             </tbody> 
         </table>
@@ -27,13 +32,17 @@
 
 <p hidden id="curr"></p>
 
-<button id="bCreate" onclick="Create()">Utwórz</button>
-<button id="bEdit" onclick="edit()">Edytuj</button>
-<button id="bDelete" onclick="Delete()">Usuń</button>
-<button id="bConfirm" onclick="Confirm()">Potwierdź</button>
+{% if worker.ID_Workers_Role.Name == "Assistant" %}
+<button id="bCreate" onclick="Create()">Create</button>
+<button id="bEdit" onclick="edit()">Edit</button>
+<button id="bDelete" onclick="Delete()">Delete</button>
+
+{% else %}
+<button id="bConfirm" onclick="Confirm()">Confirm</button>
 <p></p>
-<input name="meeting_desc" id="id_meeting_desc" placeholder="Powód"/>
-<button id="bCancel" onclick="cancel()">Odrzuć</button>
+<input name="meeting_desc" id="id_meeting_desc" placeholder="Reason"/>
+<button id="bCancel" onclick="cancel()">Cancel</button>
+{% endif %}
 
 {% endblock content %}
  
@@ -92,7 +101,7 @@
         curr = document.getElementById('curr').innerHTML;
         if (curr == 0)
             return;
-        confirm("Czy na pewno chcesz usunąć spotkanie?");
+        confirm("Delete meeting?");
         window.location.href = "delete/" + document.getElementById('curr').innerHTML;
     }
 </script>
