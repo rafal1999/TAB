@@ -1,18 +1,22 @@
+from Site.models import Candidates
 
 
 
 
 
 
-
-def add_candidate(name:str,surname:str,birthday,worker_role:str):
-    pass
+def add_candidate(name:str,surname:str,birthday,phone_number,sex,email,cv,
+                    motivation_letter,hired):
+    
+    Candidates.objects.create(Name=name,Surname=surname,Birthdate=birthday,
+                                Phone_number=phone_number,Sex=sex,CV=cv,
+                                Motivation_letter=motivation_letter,Hired=hired)
 
 def edit_candidate():
     pass
 
 def list_candidates():
-    pass
+    return Candidates.objects.all()  
 
 def list_best_candidates(amount:int):
     pass

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+ 
+{% block content %}
+
+<div class= "row">
+    <div class="col-sm">
+        <table id="table_db" class="table table-bordered table-hover" style="width: 100%">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Description</th>
+                    {%if worker.ID_Workers_Role.Name == "Assistant"%}
+                    <th scope="col">Worker</th>
+                    {%endif%}
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody >
+                {% for c in meetings %}
+                    {% if worker.ID_Workers_Role.Name == "Assistant" or c.ID_Workers.ID == worker.ID %}
+                        <tr onclick="select({{c.ID}})"> <td>{{c.Meeting_date}}</td><td>{% if c.Meeting_type == "R" %}Job Interview{% else %}Test{% endif %}
+                        </td> <td>{{c.Description}}</td>{%if worker.ID_Workers_Role.Name == "Assistant"%}<td>{{c.ID_Workers}}</td>
+                        {%endif%}<td>{% if c.Meeting_status == "P" %} Pending {% elif c.Meeting_status == "C" %} Cancelled - reason: {{c.Cancel_reason}} {% else %} Confirmed {% endif %}</td></tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody> 
+        </table>
+    </div>
+</div>
+
+<p hidden id="curr"></p>
+
+{% if worker.ID_Workers_Role.Name == "Assistant" %}
+<button id="bCreate" onclick="Create()">Create</button>
+<button id="bEdit" onclick="edit()">Edit</button>
+<button id="bDelete" onclick="Delete()">Delete</button>
+
+{% else %}
+<button id="bConfirm" onclick="Confirm()">Confirm</button>
+<p></p>
+<input name="meeting_desc" id="id_meeting_desc" placeholder="Reason"/>
+<button id="bCancel" onclick="cancel()">Cancel</button>
+{% endif %}
+
+{% endblock content %}
+ 
+{% block js %}
+ 
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+    function select(pk) {
+       document.getElementById('curr').innerHTML = pk;
+    }
+</script>
+
+<script>
+    function Create()
+    {
+        window.location.href = "create/";
+    }
+</script>
+
+<script>
+    function Confirm()
+    {
+        curr = document.getElementById('curr').innerHTML;
+        if (curr == 0)
+            return;
+        window.location.href = "confirm/" + document.getElementById('curr').innerHTML;
+    }
+</script>
+
+<script>
+    function cancel()
+    {
+        curr = document.getElementById('curr').innerHTML;
+        reason = document.getElementById('id_meeting_desc').value;
+        if (curr == 0 || reason == "")
+            return;
+        window.location.href = "cancel/" + curr + "/" + reason;
+    }
+</script>
+
+<script>
+    function edit()
+    {
+        curr = document.getElementById('curr').innerHTML;
+        if (curr == 0)
+            return;
+        window.location.href = "edit/" + document.getElementById('curr').innerHTML;
+    }
+</script>
+
+<script>
+    function Delete()
+    {
+        curr = document.getElementById('curr').innerHTML;
+        if (curr == 0)
+            return;
+        confirm("Delete meeting?");
+        window.location.href = "delete/" + document.getElementById('curr').innerHTML;
+    }
+</script>
+ 
+<script>
+    $(document).ready(function () {
+    var t = $('#table_db').DataTable( {
+        "paging": true,
+        "searching": true,
+        "autoWidth": false,
+        "ordering": true,
+        "columnDefs": [
+            {"width": "180px", "targets": 0},
+            {"width": "200px", "targets": 1},
+            {"width": "600px", "targets": 3},
+        ],
+        "order": [[0, "desc"]]
+    });
+
+    $('#table_db tbody').on( 'click', 'tr', function () {
+        if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+        }
+        else {
+            t.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+    $('#bDelete').click( function () {
+        t.row('.selected').remove().draw( false );
+    });
+});
+</script>
+ 
+{% endblock js %}

@@ -1,0 +1,31 @@
+{% load static %}
+
+<link
+    rel="stylesheet"
+    type="text/css"
+    href=" {% static 'home/css/bootstrap.css' %}"
+/>
+
+<html>
+
+<h1>New meeting</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <br>Description</br>
+    <input name="meeting_desc" id="id_meeting_desc" placeholder="Opis" value="{{meeting.Description}}"/>
+    <br>Date</br> 
+    {{ tf.Meeting_date }}
+    <br>Type</br>
+    {{ tf.Meeting_type }}
+    <br>Worker</br>
+    <select name="workers" id="workers">
+    {% for w in workers %}
+      <option>{{w.Name}} {{w.Surname}}</option>
+    {% endfor %}
+    </select>
+    <br></br>
+    <button>Submit</button>
+</form>
+
+</html>

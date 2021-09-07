@@ -1,0 +1,30 @@
+{% load static %}
+
+<link
+    rel="stylesheet"
+    type="text/css"
+    href=" {% static 'home/css/bootstrap.css' %}"
+/>
+
+<html>
+
+<h1>Add test meeting</h1>
+<form method="POST">
+    {% csrf_token %}
+
+    <input name="meeting_desc" id="id_meeting_desc" placeholder="Description" />
+    <input name="date" id="id_date" placeholder="Date" />
+    <button>Add</button>
+
+</form>
+<center>
+    <table id="id_table">
+        {% for c in meetings %}     
+        <tr><td>{{c.ID}}</td><td>{{c.Meeting_date}}</td> <td>{{c.Description}}</td>
+        <td><button type="button" class="btn btn-secondary btn-sm">Edytuj</button></td>
+        <td><button type="button" class="btn btn-secondary btn-sm">Usuń</button></td></tr>
+        {% endfor %}
+    </table>
+</center>
+
+</html>
