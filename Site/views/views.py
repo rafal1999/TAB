@@ -81,7 +81,7 @@ def edit_candidate_page(request,id_candidate):
         print(f"_{candidate.Birthdate}_ {type(candidate.Birthdate)}") 
         return render(request,'editcandidate.html',{'candidate':candidate})
 
-    # if(request.method=='PUT'):
+    
     candidate=Candidates.objects.get(ID=id_candidate)
     candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d")
     return render(request,'editcandidate.html',{'candidate':candidate})
@@ -112,3 +112,11 @@ def interview_summary(request, id_process):
     
     return render(request,"interview_summary.html",{'candidate':candidate,'role':role,
                 'interview_data': interview_data})
+
+def assistant(request):
+
+    if(request.method=='POST'):
+        redirect(f'editcandidates.html/{request.POST["candidate"]}')
+
+    candidates = Candidates.objects.all() 
+    return render(request,"assistant.html",{'candidates':candidates})

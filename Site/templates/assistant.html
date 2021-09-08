@@ -1,0 +1,26 @@
+<html>
+
+<body>
+    <center>
+
+        <form method="POST">
+                {% csrf_token %}
+                <table id="id_table">
+                {% for c in candidates%}                                                          <!--odcoywanie się do tabel połaczonych nie wprost przez klucz obcy (taka składnia) c.ID_Workers_Role.Name-->
+                <tr>
+                    <td>{{c.Name}}</td> 
+                    <td>{{c.Surname}}</td>
+                    <td>{{c.Birthdate}}</td> 
+                    <td>{{c.Sex}}</td>
+                    <td> <input name="candidate" id="id_candidate" type="button" value="{{c.ID}}"> </td>
+                </tr> 
+                {% endfor %}
+
+                </table>
+        </form>
+    </center>
+</body>
+
+
+
+</html>

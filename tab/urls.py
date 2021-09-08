@@ -25,4 +25,5 @@ urlpatterns = [
     path('editcandidate/<int:id_candidate>', views.edit_candidate_page),
     path('interview/<int:id_process>', views.edit_interview_data),
     path('interview/interview_summary/<int:id_process>', views.interview_summary),
+    path('assistant/', views.assistant),
 ]
