@@ -15,15 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Site.views import views
+from Site import views
 urlpatterns = [
     path('<int:id_test>', views.Home.as_view(), name='home'),
     path('testworkers/', views.test_workers_page, name='testworkers'),
     path('testcandidates/',views.test_candidates_page, name='testcandidates'),
     path('index/', views.Index.as_view(), name='index'),
     path('admin/', admin.site.urls),
-    path('editcandidate/<int:id_candidate>', views.edit_candidate_page,name='editcandidate'),
-    path('interview/<int:id_process>', views.edit_interview_data),
-    path('interview/interview_summary/<int:id_process>', views.interview_summary),
-    path('assistant/', views.assistant),
+    path('interview/<int:id_process>', views.add_interview_data_page,name='add_interview_data_page'),
+    path('interview/interview_summary/<int:id_process>', views.interview_summary_page,name='interview_summary_page'),
+    path('assistant/', views.assistant_page, name='assistant_page'),
+     path('assistant/editcandidate/<int:id_candidate>', views.edit_candidate_page,name='edit_candidate_page'),
+    path('assistant/addcandidate/',views.add_candidate_page,name='add_candidate_page'),
+    path('assistant/addprocess/',views.add_process_page,name='add_process_page'),
 ]

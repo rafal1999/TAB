@@ -1,4 +1,4 @@
-from Site.models import Candidates, Recruitment_Meetings
+from Site.models import Candidates, Recruitment_Meetings, Recruitment_Process, Candidates_Role
 
 
 
@@ -21,7 +21,10 @@ def edit_candidate(id,name,surname,birthday,phone_number,sex,email,cv,
 
 
 def list_candidates():
-    return Candidates.objects.all()  
+    return Candidates.objects.all() 
+
+def list_candidates_roles():
+    return Candidates_Role.objects.all()
 
 def list_best_candidates(amount:int):
     pass
@@ -40,6 +43,10 @@ def next_stage():
 
 def add_test():
     pass
+def add_process(id_candidate, id_role):
+    Recruitment_Process.objects.create(ID_Candidates=Candidates.objects.get(ID=id_candidate),ID_Candidates_Role=Candidates_Role.objects.get(ID=id_role),Stage=1)
+
+
 
 def edit_test():
     pass

@@ -5,8 +5,9 @@
 <body>
     <center>
 
-        <form method="POST">
+        <form method="POST" id="editform">
                 {% csrf_token %}
+                <input type="hidden" name="form_type" value="editform">
                 <table id="id_table">
                 {% for c in candidates%}                                                          <!--odcoywanie się do tabel połaczonych nie wprost przez klucz obcy (taka składnia) c.ID_Workers_Role.Name-->
                 <tr>
@@ -20,9 +21,17 @@
                 {% endfor %}
 
                 </table>
-
-                <input name="add" id="id_add" type="submit" value="add"> 
                 
+        </form>
+        <form method="POST" id="addform">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="addform">
+            <input type="submit" name="add" value="add">
+        </form>
+        <form method="POST" id="processform">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="processform">
+            <input type="submit" name="add_process" value="add process">
         </form>
 
    </center>

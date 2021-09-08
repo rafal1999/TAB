@@ -10,7 +10,7 @@ from django.views               import View
 from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth        import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
-from Site.api.candidates        import list_candidates, add_candidate
+from Site.api.candidates        import list_candidates, add_candidate, list_candidates_roles, add_process
 from Site.api.interview         import add_interview_data, check_if_interview_took_place
 # Create your views here.
 
@@ -74,27 +74,22 @@ def edit_candidate_page(request,id_candidate):
                         sex=request.POST['candidate_sex'], email=request.POST['candidate_email'],
                         cv=request.POST['candidate_cv'],motivation_letter=request.POST['candidate_motivation_letter'],)
         candidate=Candidates.objects.get(ID=id_candidate)
-        print(candidate.Birthdate)
-        print(type(candidate.Birthdate))
         candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d") 
-        print(type(candidate.Birthdate))
-        print(f"_{candidate.Birthdate}_ {type(candidate.Birthdate)}") 
         return render(request,'editcandidate.html',{'candidate':candidate})
-
-    
+   
     candidate=Candidates.objects.get(ID=id_candidate)
     candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d")
     return render(request,'editcandidate.html',{'candidate':candidate})
 
-def edit_interview_data(request,id_process):
+def add_interview_data_page(request,id_process):
 
     if (check_if_interview_took_place(id_process=id_process)):
-        return redirect(f'interview_summary/{id_process}')
+        return redirect('interview_summary_page',id_process=id_process)
    
     if(request.method=='POST'):
         add_interview_data(id_process=id_process, id_worker=1, hard_skils=request.POST['hard_skils'], 
                             soft_skils=request.POST["soft_skils"], grade=request.POST["grade"], notes=request.POST['notes']) 
-        return redirect(f'interview_summary/{id_process}')
+        return redirect(interview_summary_page,id_process=id_process)
 
     process = Recruitment_Process.objects.get(ID=id_process)
     candidate=Candidates.objects.get(ID=process.ID_Candidates.ID)
@@ -103,7 +98,7 @@ def edit_interview_data(request,id_process):
     return render(request, 'interview.html',{'candidate':candidate,'role':role})
 
 
-def interview_summary(request, id_process):
+def interview_summary_page(request, id_process):
 
     process = Recruitment_Process.objects.get(ID=id_process)
     candidate=Candidates.objects.get(ID=process.ID_Candidates.ID)
@@ -113,11 +108,37 @@ def interview_summary(request, id_process):
     return render(request,"interview_summary.html",{'candidate':candidate,'role':role,
                 'interview_data': interview_data})
 
-def assistant(request):
+def assistant_page(request):
 # 
     if(request.method=='POST'):
-        print("tutaj")
-        return  redirect('editcandidate',id_candidate=int(request.POST["candidate"]))
-    
+        if(request.POST['form_type']=='addform'):
+           return  redirect('add_candidate_page') 
+        if(request.POST['form_type']=='editform'):
+           return  redirect('edit_candidate_page',id_candidate=int(request.POST["candidate"]))
+        if(request.POST['form_type']=='processform'):
+           return redirect('add_process_page')
+
     candidates = Candidates.objects.all() 
     return render(request,"assistant.html",{'candidates':candidates})
+
+def add_candidate_page(request):
+    if request.method=="POST":
+        add_candidate(name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
+                        birthday=request.POST['candidate_birthdate'], phone_number=request.POST['candidate_phone_number'],
+                        sex=request.POST['candidate_sex'], email='test@m.com',cv='pass',motivation_letter='pas',
+                        hired='P')
+        return  redirect('assistant_page')
+
+    return render(request,"addcandidate.html") 	
+
+def add_process_page(request):
+
+    candidates=list_candidates()
+    roles=list_candidates_roles()
+    if(request.method=='POST'):
+        add_process(id_candidate=request.POST['candidate'], id_role=request.POST['role'])
+
+    return render(request,'addprocess.html',{'candidates':candidates, 'roles':roles})
+
+def process_sumary_page(request):
+    pass
