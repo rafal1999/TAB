@@ -22,7 +22,7 @@ urlpatterns = [
     path('testcandidates/',views.test_candidates_page, name='testcandidates'),
     path('index/', views.Index.as_view(), name='index'),
     path('admin/', admin.site.urls),
-    path('editcandidate/<int:id_candidate>', views.edit_candidate_page),
+    path('editcandidate/<int:id_candidate>', views.edit_candidate_page,name='editcandidate'),
     path('interview/<int:id_process>', views.edit_interview_data),
     path('interview/interview_summary/<int:id_process>', views.interview_summary),
     path('assistant/', views.assistant),

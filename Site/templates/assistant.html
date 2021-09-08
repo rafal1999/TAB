@@ -1,5 +1,7 @@
 <html>
 
+<h1>Lista</h1>
+
 <body>
     <center>
 
@@ -12,13 +14,18 @@
                     <td>{{c.Surname}}</td>
                     <td>{{c.Birthdate}}</td> 
                     <td>{{c.Sex}}</td>
-                    <td> <input name="candidate" id="id_candidate" type="button" value="{{c.ID}}"> </td>
+                    <td><button name="candidate" value="{{c.ID}}" type="edit">edit</button>                    </td>
+                        <!-- disable</td> -->
                 </tr> 
                 {% endfor %}
 
                 </table>
+
+                <input name="add" id="id_add" type="submit" value="add"> 
+                
         </form>
-    </center>
+
+   </center>
 </body>
 
 

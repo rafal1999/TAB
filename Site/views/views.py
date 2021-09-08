@@ -1,4 +1,4 @@
-from django.shortcuts           import render, redirect 
+from django.shortcuts           import render, redirect
 from django.http                import HttpResponse  
 # from django.db.models.functions import Concat 
 # from django.db.models           import F, Value
@@ -114,9 +114,10 @@ def interview_summary(request, id_process):
                 'interview_data': interview_data})
 
 def assistant(request):
-
+# 
     if(request.method=='POST'):
-        redirect(f'editcandidates.html/{request.POST["candidate"]}')
-
+        print("tutaj")
+        return  redirect('editcandidate',id_candidate=int(request.POST["candidate"]))
+    
     candidates = Candidates.objects.all() 
     return render(request,"assistant.html",{'candidates':candidates})
