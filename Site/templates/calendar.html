@@ -22,7 +22,7 @@
                     {% if worker.ID_Workers_Role.Name == "Assistant" or c.ID_Workers.ID == worker.ID %}
                         <tr onclick="select({{c.ID}})"> <td>{{c.Meeting_date}}</td><td>{% if c.Meeting_type == "R" %}Job Interview{% else %}Test{% endif %}
                         </td> <td>{{c.Description}}</td>{%if worker.ID_Workers_Role.Name == "Assistant"%}<td>{{c.ID_Workers}}</td>
-                        {%endif%}<td>{% if c.Meeting_status == "P" %} Pending {% elif c.Meeting_status == "C" %} Cancelled - reason: {{c.Cancel_reason}} {% else %} Confirmed {% endif %}</td></tr>
+                        {%endif%}<td>{% if c.Meeting_status == "P" %} Pending {% elif c.Meeting_status == "C" %} <font style="color:red">Cancelled - reason: {{c.Cancel_reason}}</font> {% else %} Confirmed {% endif %}</td></tr>
                     {% endif %}
                 {% endfor %}
             </tbody> 

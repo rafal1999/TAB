@@ -85,7 +85,6 @@ def create_meeting(request):
     f2 = forms.ChoiceField()
     return render(request, 'calendarcreate.html', {'tf':tf, "workers":workers})
 
-@login_required(login_url='/login/')
 def edit_meeting(request, id):
     workers = WorkersAPI.list_workers()
     meeting = Calendar.get_meeting(id)
@@ -155,7 +154,7 @@ class Login(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            response = redirect('/')
+            response = redirect(self.request.GET.get('next', '/'))
             return response
         
         else: 
@@ -165,10 +164,10 @@ def log_out(request):
     logout(request)
     response = redirect('/login/')
     return response
-
-class calendar(View):
+    
+class calendar(LoginRequiredMixin, View):
     template = 'calendar.html'
-    login_url = 'login/'
+    login_url = '/login'
 
     def get(self, request):
         meetings = Calendar.list_meetings()
