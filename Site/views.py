@@ -13,10 +13,11 @@ from django.views               import View
 from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth        import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
-from Site.api.candidates        import list_candidates, add_candidate
+from Site.api.candidates        import list_candidates, add_candidate, list_candidates_roles, add_process
+from Site.api.interviews        import check_if_interview_took_place, add_interview_data
 import Site.api.workers         as WorkersAPI
 import Site.api.calendar        as Calendar
-from Site.models                import Workers, Recruitment_Process 
+from Site.models                import Workers, Recruitment_Process, Candidates_Role, Recruitment_Meetings
 from django                     import forms      
 from Site.forms                 import MeetingTypeForm
 from django.contrib.auth.models import User
