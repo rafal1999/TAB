@@ -140,5 +140,5 @@ def add_process_page(request):
 
     return render(request,'addprocess.html',{'candidates':candidates, 'roles':roles})
 
-def process_sumary_page(request):
+def process_sumary_page(request): #dsad
     pass
