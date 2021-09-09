@@ -33,5 +33,12 @@ urlpatterns = [
     path('calendar/cancel/<int:id>/<str:desc>', views.cancel_meeting, name='cancelmeeting'),
     path('calendar/delete/<int:id>', views.delete_meeting, name='deletemeeting'),
     path('calendar/create/', views.create_meeting, name='createmeeting'),
-
+    path('interview/<int:id_process>', views.add_interview_data_page,name='add_interview_data_page'),
+    path('interview/interview_summary/<int:id_process>', views.interview_summary_page,name='interview_summary_page'),
+    path('assistant/', views.assistant_page, name='assistant_page'),
+    path('assistant/editcandidate/<int:id_candidate>', views.edit_candidate_page,name='edit_candidate_page'),
+    path('assistant/addcandidate/',views.add_candidate_page,name='add_candidate_page'),
+    path('assistant/addprocess/',views.add_process_page,name='add_process_page'),
 ]
+
+

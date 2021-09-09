@@ -1,0 +1,31 @@
+<html>
+
+<h1>{{candidate.Name}} {{candidate.Surname}} Interview Role: {{role.Name}} </h1>
+
+<center>
+<br>
+
+  <form method="POST">
+        {% csrf_token %}
+        <br>
+        <textarea name="hard_skils" id="id_hard_skils" rows="5" cols="50">
+            Enter here data.
+        </textarea>
+        <br>
+        <textarea name="soft_skils" id="id_soft_skils" rows="5" cols="50">
+            Enter here data.
+        </textarea>
+        <br>
+        <textarea name="notes" id="id_notes" rows="5" cols="50">
+            Enter here data.
+        </textarea>
+        <br>
+        Grade: 
+        <input name="grade" id="id_grade" type="range" min="0" max="10" step="1"/>
+        <br>
+        <button>save</button>
+  </form>
+  
+</center>
+
+</html>
