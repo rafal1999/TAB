@@ -22,6 +22,12 @@
                 <td>{{p.ID_Recruitment_Process.ID_Candidates.Name}}</td> 
                 <td>{{p.ID_Recruitment_Process.ID_Candidates.Surname}}</td> 
                 <td> {{p.Points}} </td>
+                <td> <form method="POST" id="showinterview">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="showinterview">
+                    <button name="process" value="{{p.ID_Recruitment_Process.ID}}" type="edit">show interview data</button>
+                    </form>
+                </td>
             </tr> 
             {% endfor %}
         </table>

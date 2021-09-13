@@ -276,6 +276,8 @@ def recruiter_role_page(request,id_role):
             return redirect(add_tests_page,id_role=id_role)
         if(request.POST['form_type']=='startinterview'):
             return redirect(choose_interview_candidate,id_role=id_role)
+        if(request.POST['form_type']=='showinterview'):
+            return redirect(interview_summary_page,id_process=int(request.POST['process']))
 
     return render(request,'recruterrole.html',{'role':role,'tests_with_processes':tests_with_processes,
                                                 'procesess_without_tests':procesess_without_tests})
