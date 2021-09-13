@@ -13,6 +13,9 @@ def add_worker(name:str,surname:str,birthday,worker_role:str):
 def list_workers():
     return Workers.objects.all()
 
+def list_workers_except(role_id):
+    return Workers.objects.all().exclude(ID_Workers_Role = role_id)
+
 def get_worker(id):
     return Workers.objects.get(pk=id)
 

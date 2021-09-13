@@ -38,23 +38,29 @@
         <table id="table_db" class="table table-bordered table-hover" style="width: 100%">
             <thead>
                 <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Description</th>
-                    {%if worker.ID_Workers_Role.Name == "Assistant"%}
-                    <th scope="col">Worker</th>
-                    {%endif%}
-                    <th scope="col">Candidate</th>
-                    <th scope="col">Status</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Surname</th>
+                    <th scope="col">Birthdate</th>
+                    <th scope="col">Sex</th>
+                    <th scope="col">Application date</th>
+                    <th scope="col">Phone number</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Motivational letter</th>
+                    <th scope="col">CV</th>
                 </tr>
             </thead>
             <tbody >
-                {% for c in meetings %}
-                    {% if worker.ID_Workers_Role.Name == "Assistant" or c.ID_Workers.ID == worker.ID %}
-                        <tr onclick="select({{c.ID}})"> <td>{{c.Meeting_date}}</td><td>{% if c.Meeting_type == "R" %}Job Interview{% else %}Test{% endif %}
-                        </td> <td>{{c.Description}}</td>{%if worker.ID_Workers_Role.Name == "Assistant"%}<td>{{c.ID_Workers}}</td>{%endif%}<td>{{c.ID_Recruitment_Process}}</td>
-                        <td>{% if c.Meeting_status == "P" %} Pending {% elif c.Meeting_status == "C" %} <font style="color:red">Cancelled - reason: {{c.Cancel_reason}}</font> {% else %} Confirmed {% endif %}</td></tr>
-                    {% endif %}
+                {% for c in candidates %}
+                        <tr onclick="select({{c.ID}})"> 
+                        <td>{{c.Name}}</td>
+                        <td>{{c.Surname}}</td> 
+                        <td>{{c.Birthdate}}</td>
+                        <td>{{c.Sex}}</td>
+                        <td>{{c.Application_date}}</td>
+                        <td>{{c.Phone_number}}</td>
+                        <td>{{c.Email_address}}</td>
+                        <td>{{c.Motivation_letter}}</td>
+                        <td>{{c.CV}}</td></tr>
                 {% endfor %}
             </tbody> 
         </table>
@@ -64,17 +70,12 @@
 <p hidden id="curr"></p>
 
 {% if worker.ID_Workers_Role.Name == "Assistant" %}
-<button id="bCreate" onclick="Create()">Create</button>
+<button id="bAdd" onclick="Add()">Add candidate</button>
 <button id="bEdit" onclick="edit()">Edit</button>
 <button id="bDelete" onclick="Delete()">Delete</button>
-
-{% else %}
-<button id="bConfirm" onclick="Confirm()">Confirm</button>
-<p></p>
-<input name="meeting_desc" id="id_meeting_desc" placeholder="Reason"/>
-<button id="bCancel" onclick="cancel()">Cancel</button>
+<br></br>
+<button id="bAddProcess" onclick="AddProcess()">Add process</button>
 {% endif %}
-
 
 {% endblock content %}
  
@@ -90,30 +91,16 @@
 </script>
 
 <script>
-    function Create()
+    function Add()
     {
-        window.location.href = "create/";
+        window.location.href = "candidates/addcandidate/";
     }
 </script>
 
 <script>
-    function Confirm()
+    function AddProcess()
     {
-        curr = document.getElementById('curr').innerHTML;
-        if (curr == 0)
-            return;
-        window.location.href = "confirm/" + document.getElementById('curr').innerHTML;
-    }
-</script>
-
-<script>
-    function cancel()
-    {
-        curr = document.getElementById('curr').innerHTML;
-        reason = document.getElementById('id_meeting_desc').value;
-        if (curr == 0 || reason == "")
-            return;
-        window.location.href = "cancel/" + curr + "/" + reason;
+        window.location.href = "candidates/addprocess/";
     }
 </script>
 
@@ -123,7 +110,7 @@
         curr = document.getElementById('curr').innerHTML;
         if (curr == 0)
             return;
-        window.location.href = "edit/" + document.getElementById('curr').innerHTML;
+        window.location.href = "candidates/editcandidate/" + document.getElementById('curr').innerHTML;
     }
 </script>
 
@@ -133,8 +120,8 @@
         curr = document.getElementById('curr').innerHTML;
         if (curr == 0)
             return;
-        if (confirm("Delete meeting?"))
-            window.location.href = "delete/" + document.getElementById('curr').innerHTML;
+        if (confirm("Delete candidate?"))
+            window.location.href = "candidates/delete/" + document.getElementById('curr').innerHTML;
     }
 </script>
  
@@ -146,9 +133,15 @@
         "autoWidth": false,
         "ordering": true,
         "columnDefs": [
-            {"width": "180px", "targets": 0},
+            {"width": "200px", "targets": 0},
             {"width": "200px", "targets": 1},
-            {"width": "600px", "targets": 2},
+            {"width": "100px", "targets": 2},
+            {"width": "30px" , "targets": 3},
+            {"width": "150px", "targets": 4},
+            {"width": "150px", "targets": 5},
+            {"width": "200px", "targets": 6},
+            {"width": "300px", "targets": 7},
+            {"width": "300px", "targets": 8},
         ],
         "order": [[0, "desc"]]
     });

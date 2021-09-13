@@ -26,8 +26,15 @@ def list_candidates():
 def list_candidates_roles():
     return Candidates_Role.objects.all()
 
-
+def delete_candidate(id):
+    Candidates.objects.filter(pk=id).delete()
 
 def add_process(id_candidate, id_role):
     Recruitment_Process.objects.create(ID_Candidates=Candidates.objects.get(ID=id_candidate),ID_Candidates_Role=Candidates_Role.objects.get(ID=id_role),Stage=1)
+
+def list_processes():
+    return Recruitment_Process.objects.all()
+
+def get_process(id):
+    return Recruitment_Process.objects.get(pk=id)
 

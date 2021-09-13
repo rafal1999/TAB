@@ -1,3 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+ 
+{% block content %}
+<link
+    rel="stylesheet"
+    type="text/css"
+    href=" {% static 'home/css/bootstrap.css' %}"
+/>
+<html>
+    <title>Candidates recruitment system</title>
+    <body style="background-color:ivory">
+        <nav class="navbar fixed-top navbar-dark bg-primary navbar-expand-lg" style="height: 50px" >
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Logo</a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="/calendar/" class="nav-link">Calendary</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/candidates" class="nav-link">Candidates</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        
+    <nav class="navbar fixed-bottom navbar-dark bg-primary " style="height: 50px" ></nav>
+
+
 {% if user.is_authenticated %}
   Hi, {{ worker.Name }} {{ worker.Surname }} ({{ user.username }})
   <a href="{% url 'logout' %}">Log Out</a>
@@ -6,3 +38,8 @@
   <p>You are not logged in</p>
   <a href="{% url 'login' %}">Log In</a>
 {% endif %}
+
+{% endblock content %}
+    
+</body>
+</html>

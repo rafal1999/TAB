@@ -25,6 +25,12 @@
     {% endfor %}
     </select>
     <br></br>
+    <select name="process" id="process">
+    {% for p in processes %}
+      <option>{{p}}</option>
+    {% endfor %}
+    </select>
+    <br></br>
     <button>Submit</button>
 </form>
 

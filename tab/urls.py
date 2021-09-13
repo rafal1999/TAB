@@ -13,7 +13,6 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from Site.models import Calendar
 from django.contrib import admin
 from django.urls import path
 from Site import views
@@ -36,9 +35,11 @@ urlpatterns = [
     path('interview/<int:id_process>', views.add_interview_data_page,name='add_interview_data_page'),
     path('interview/interview_summary/<int:id_process>', views.interview_summary_page,name='interview_summary_page'),
     path('assistant/', views.assistant_page, name='assistant_page'),
-    path('assistant/editcandidate/<int:id_candidate>', views.edit_candidate_page,name='edit_candidate_page'),
-    path('assistant/addcandidate/',views.add_candidate_page,name='add_candidate_page'),
-    path('assistant/addprocess/',views.add_process_page,name='add_process_page'),
+    path('candidates/editcandidate/<int:id_candidate>', views.edit_candidate_page,name='edit_candidate_page'),
+    path('candidates/addcandidate/',views.add_candidate_page,name='add_candidate_page'),
+    path('candidates/addprocess/',views.add_process_page,name='add_process_page'),
+    path('candidates/delete/<int:id>', views.delete_candidate, name='deletecandidate'),
+    path('candidates', views.candidates.as_view(), name='candidates')
 ]
 
 

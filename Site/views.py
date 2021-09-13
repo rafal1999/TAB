@@ -17,6 +17,7 @@ from Site.api.candidates        import list_candidates, add_candidate, list_cand
 from Site.api.interviews        import check_if_interview_took_place, add_interview_data
 import Site.api.workers         as WorkersAPI
 import Site.api.calendar        as Calendar
+import Site.api.candidates      as CandidatesAPI
 from Site.models                import Workers, Recruitment_Process, Candidates_Role, Recruitment_Meetings
 from django                     import forms      
 from Site.forms                 import MeetingTypeForm
@@ -66,31 +67,39 @@ def test_calendar_page(request):
     return render(request,'testcalendar.html', {'meetings':meetings, 'form':f})
 
 def create_meeting(request):
-    workers = WorkersAPI.list_workers()
+    workers = WorkersAPI.list_workers_except(1)
+    processes = CandidatesAPI.list_processes()
     tf = MeetingTypeForm(request.POST)
     if request.method=="POST":
         date = "01.01.2000 00:00"
         type = 'T'
-        worker = WorkersAPI.get_worker(0)
+        worker = WorkersAPI.get_worker(1)
         if (tf.is_valid()):
             type = tf.cleaned_data['Meeting_type']
             date = tf.cleaned_data['Meeting_date']
             workername = request.POST['workers'].split()
             worker = WorkersAPI.get_worker_by_name(workername[0], workername[1])
+            processName = request.POST['process']
+            processID = 1
+            for p in processes:
+                if str(p) == str(processName):
+                    processID = p.ID
+            process = CandidatesAPI.get_process(processID)
         
         Calendar.add_meeting(date=date, desc=request.POST['meeting_desc'], 
-                    meeting_type=type, worker_ids=worker, recruitment_process_id=Recruitment_Process.objects.all()[0])
+                    meeting_type=type, worker_ids=worker, recruitment_process_id=process)
         response = redirect('/calendar/')
         return response
     f = forms.DateField()
     f2 = forms.ChoiceField()
-    return render(request, 'calendarcreate.html', {'tf':tf, "workers":workers})
+    return render(request, 'calendarcreate.html', {'tf':tf, "workers":workers, "processes":processes})
 
 def edit_meeting(request, id):
+    processes = CandidatesAPI.list_processes()
     workers = WorkersAPI.list_workers()
     meeting = Calendar.get_meeting(id)
     tf = MeetingTypeForm(request.POST)
-    worker = WorkersAPI.get_worker(0)
+    worker = WorkersAPI.get_worker(1)
     if request.method=="POST":
         date = "01.01.2000 00:00"
         type = meeting.Meeting_type
@@ -100,12 +109,20 @@ def edit_meeting(request, id):
             date = tf.cleaned_data['Meeting_date']
             workername = request.POST['workers'].split()
             worker = WorkersAPI.get_worker_by_name(workername[0], workername[1])
+            processName = request.POST['process']
+            processID = 1
+            for p in processes:
+                if str(p) == str(processName):
+                    processID = p.ID
+            process = CandidatesAPI.get_process(processID)
 
         Calendar.edit_meeting(meeting_id = id, date=date, desc=request.POST['meeting_desc'], 
-                    meeting_type=type, worker_ids=worker, recruitment_process_id=Recruitment_Process.objects.all()[0])
+                    meeting_type=type, worker_ids=worker, recruitment_process_id=process)
         meeting = Calendar.get_meeting(id)
+        response = redirect('calendar')
+        return response
 
-    return render(request, 'calendaredit.html', {'meeting':meeting, 'tf':tf, "workers":workers, "worker":worker})
+    return render(request, 'calendaredit.html', {'meeting':meeting, 'tf':tf, "workers":workers, "worker":worker, "processes":processes})
 
 def delete_meeting(request, id):
     Calendar.delete_meeting(id)
@@ -178,14 +195,27 @@ class calendar(LoginRequiredMixin, View):
         selected = 0
         return render(request, self.template, {'meetings':meetings, 'selected':selected, 'worker':worker}) 
 
+class candidates(LoginRequiredMixin, View):
+    template = 'candidates.html'
+    login_url = '/login'
 
+    def get(self, request):
+        candidates = CandidatesAPI.list_candidates()
+        worker = None
+        if request.user.is_authenticated:
+            worker = WorkersAPI.get_worker_by_user_id(request.user.id)
+        selected = 0
+        return render(request, self.template, {'candidates':candidates, 'selected':selected, 'worker':worker}) 
 
-
+def delete_candidate(request, id):
+    CandidatesAPI.delete_candidate(id)
+    response = redirect('candidates')
+    return response
 
 def edit_candidate_page(request,id_candidate):
 
     if(request.method=='POST'):
-        edit_candidate(id=id_candidate,name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
+        CandidatesAPI.edit_candidate(id=id_candidate,name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
                         birthday=request.POST['candidate_birthdate'], phone_number=request.POST['candidate_phone_number'],
                         sex=request.POST['candidate_sex'], email=request.POST['candidate_email'],
                         cv=request.POST['candidate_cv'],motivation_letter=request.POST['candidate_motivation_letter'],)
@@ -203,7 +233,7 @@ def add_interview_data_page(request,id_process):
         return redirect('interview_summary_page',id_process=id_process)
    
     if(request.method=='POST'):
-        add_interview_data(id_process=id_process, id_worker=1, hard_skils=request.POST['hard_skils'], 
+        CandidatesAPI.add_interview_data(id_process=id_process, id_worker=1, hard_skils=request.POST['hard_skils'], 
                             soft_skils=request.POST["soft_skils"], grade=request.POST["grade"], notes=request.POST['notes']) 
         return redirect(interview_summary_page,id_process=id_process)
 
@@ -243,7 +273,7 @@ def add_candidate_page(request):
                         birthday=request.POST['candidate_birthdate'], phone_number=request.POST['candidate_phone_number'],
                         sex=request.POST['candidate_sex'], email='test@m.com',cv='pass',motivation_letter='pas',
                         hired='P')
-        return  redirect('assistant_page')
+        return redirect('candidates')
 
     return render(request,"addcandidate.html") 	
 
@@ -253,6 +283,7 @@ def add_process_page(request):
     roles=list_candidates_roles()
     if(request.method=='POST'):
         add_process(id_candidate=request.POST['candidate'], id_role=request.POST['role'])
+        return redirect('candidates')
 
     return render(request,'addprocess.html',{'candidates':candidates, 'roles':roles})
 
