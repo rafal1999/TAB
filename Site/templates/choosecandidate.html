@@ -1,0 +1,28 @@
+<html>
+
+<h1>Lista</h1>
+
+<body>
+    <center>
+
+        <form method="POST" id="editform">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="editform">
+                <table id="id_table">
+                {% for p in processes%}                                                          <!--odcoywanie się do tabel połaczonych nie wprost przez klucz obcy (taka składnia) c.ID_Workers_Role.Name-->
+                <tr>
+                    <td>{{p.ID_Candidates.Name}}</td> 
+                    <td>{{p.ID_Candidates.Surname}}</td> 
+                    <td><button name="process" value="{{p.ID}}" type="edit">start interview</button>
+                </tr> 
+                {% empty %}
+                All candidates had intervews!
+                {% endfor %}
+
+                </table>
+   </center>
+</body>
+
+
+
+</html>

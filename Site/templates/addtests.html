@@ -1,0 +1,27 @@
+
+<html>
+
+    <h1>Add Tests for {{role.Name}}</h1>    
+    <form method="POST" id="addform">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="addform">
+        <table id="id_table">
+            {% for p in processes%}                                                          <!--odcoywanie się do tabel połaczonych nie wprost przez klucz obcy (taka składnia) c.ID_Workers_Role.Name-->
+            <tr>
+                <td>{{p.ID_Candidates.Name}}</td>
+                <td>{{p.ID_Candidates.Surname}}</td> 
+
+                <td><input type="number" min="0" max="10" step="0.1" name="{{p.ID}}"></td>
+            </tr> 
+            {% empty %}
+            All candidates have marks!
+            {% endfor %}
+        </table>
+        <button>save</button>
+    </form>
+    <form method="POST" id="backform">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="backform">
+        <button>back</button>
+    </form>
+</html>
