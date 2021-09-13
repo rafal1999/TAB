@@ -13,11 +13,13 @@ from django.views               import View
 from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth        import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
-from Site.api.candidates        import list_candidates, add_candidate, list_candidates_roles, add_process
+from Site.api.candidates        import (list_candidates, add_candidate, list_candidates_roles, add_process, 
+                                        list_processes_by_role, list_processes_without_tests_by_role, list_processes_by_role_and_stage)
 from Site.api.interviews        import check_if_interview_took_place, add_interview_data
 import Site.api.workers         as WorkersAPI
 import Site.api.calendar        as Calendar
 import Site.api.candidates      as CandidatesAPI
+import Site.api.tests           as tests
 from Site.models                import Workers, Recruitment_Process, Candidates_Role, Recruitment_Meetings
 from django                     import forms      
 from Site.forms                 import MeetingTypeForm
@@ -235,7 +237,7 @@ def add_interview_data_page(request,id_process):
     if(request.method=='POST'):
         CandidatesAPI.add_interview_data(id_process=id_process, id_worker=1, hard_skils=request.POST['hard_skils'], 
                             soft_skils=request.POST["soft_skils"], grade=request.POST["grade"], notes=request.POST['notes']) 
-        return redirect(interview_summary_page,id_process=id_process)
+        return redirect('interview_summary_page',id_process=id_process)
 
     process = Recruitment_Process.objects.get(ID=id_process)
     candidate=Candidates.objects.get(ID=process.ID_Candidates.ID)
@@ -289,3 +291,51 @@ def add_process_page(request):
 
 def process_sumary_page(request):
     pass
+
+def recruiter_start_page(request):
+    if(request.method=='POST'):
+        return  redirect(recruiter_role_page,id_role=request.POST['role'])
+    roles=list_candidates_roles()
+    return render(request,'recruiter.html',{'roles':roles})
+
+def recruiter_role_page(request,id_role):
+    role = Candidates_Role.objects.get(ID=id_role)
+    tests_with_processes = tests.return_test(id_role=id_role)
+    procesess_without_tests = Recruitment_Process.objects.filter(Stage=1, ID_Candidates_Role=role)
+    if(request.method=='POST'):
+        if(request.POST['form_type']=='addtest'):
+            return redirect(add_tests_page,id_role=id_role)
+        if(request.POST['form_type']=='startinterview'):
+            return redirect(choose_interview_candidate,id_role=id_role)
+        if(request.POST['form_type']=='showinterview'):
+            return redirect(interview_summary_page,id_process=int(request.POST['process']))
+
+    return render(request,'recruterrole.html',{'role':role,'tests_with_processes':tests_with_processes,
+                                                'procesess_without_tests':procesess_without_tests})
+
+def choose_interview_candidate(request,id_role):
+
+    processes = list_processes_by_role_and_stage(id_role=id_role, stage=2)
+    if(request.method=='POST'):
+        return redirect(add_interview_data_page,id_process=int(request.POST['process']))
+    return render(request,'choosecandidate.html',{'processes':processes})
+
+
+def add_tests_page(request,id_role):
+
+    processes = list_processes_without_tests_by_role(id_role=id_role)
+    role = Candidates_Role.objects.get(ID=id_role)
+    if(request.method=='POST'):
+        if(request.POST['form_type']=='addform'):
+            processes_id_list=processes.values_list('ID',flat=True)
+            for i in processes_id_list :
+                print(request.POST[f'{i}'])
+                if request.POST[f'{i}'] != '' :
+                    p=int(request.POST[f'{i}'])
+                    tests.add_test(id_process=i, id_worker=1, points=p)
+        if(request.POST['form_type']=='backform'):
+            return redirect(recruiter_start_page)
+
+    return render(request, 'addtests.html',{'processes':processes, 'role':role})
+
+

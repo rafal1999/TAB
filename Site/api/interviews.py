@@ -19,6 +19,7 @@ def list_interviews():
 	return Recruitment_Meetings.objects.all()
 
 def add_interview_data(id_process,id_worker, hard_skils, soft_skils, grade, notes):
+    Recruitment_Process.objects.filter(ID=id_process).update(Stage=3)
     Recruitment_Meetings.objects.create(ID_Recruitment_Process =Recruitment_Process.objects.get(ID=id_process),
                                         ID_Workers =Workers.objects.get(ID=id_worker)
                                         ,Hard_skills=hard_skils, Soft_skills=soft_skils,

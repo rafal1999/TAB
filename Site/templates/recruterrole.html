@@ -1,0 +1,46 @@
+<html>
+
+    <h1>candidates for role: {{role.Name}}</h1>    
+    
+
+    <center> 
+        <table id="id_table">
+            <tr>
+                <td>Name</td> 
+                <td>Surname</td> 
+                <td> mark </td>
+            </tr>
+            {% for p in procesess_without_tests %}                                                        
+            <tr>
+                <td>{{p.ID_Candidates.Name}}</td> 
+                <td>{{p.ID_Candidates.Surname}}</td> 
+                <td> - </td>
+            </tr> 
+            {% endfor %} 
+            {% for p in tests_with_processes %}                                                          <!--odcoywanie się do tabel połaczonych nie wprost przez klucz obcy (taka składnia) c.ID_Workers_Role.Name-->
+            <tr>
+                <td>{{p.ID_Recruitment_Process.ID_Candidates.Name}}</td> 
+                <td>{{p.ID_Recruitment_Process.ID_Candidates.Surname}}</td> 
+                <td> {{p.Points}} </td>
+                <td> <form method="POST" id="showinterview">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="showinterview">
+                    <button name="process" value="{{p.ID_Recruitment_Process.ID}}" type="edit">show interview data</button>
+                    </form>
+                </td>
+            </tr> 
+            {% endfor %}
+        </table>
+        <form method="POST" id="addtest">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="addtest">
+            <button>Add marks</button>
+        </form>
+        <form method="POST" id="startinterview">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="startinterview">
+            <button>start interview</button>
+        </form>
+    </center>
+  
+</html>
