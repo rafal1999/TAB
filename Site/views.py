@@ -6,7 +6,7 @@ from django.shortcuts           import redirect, render
 from django.http                import HttpResponse  
 # from django.db.models.functions import Concat 
 # from django.db.models           import F, Value
-from Site.models                import Candidates, Workers, Workers_Role, Calendar
+from Site.models                import Candidates, Workers, Workers_Role, Calendar, Tests
 from datetime                   import date, datetime
 from Site.api.workers           import add_worker
 from django.views               import View
@@ -235,7 +235,7 @@ def add_interview_data_page(request,id_process):
         return redirect('interview_summary_page',id_process=id_process)
    
     if(request.method=='POST'):
-        CandidatesAPI.add_interview_data(id_process=id_process, id_worker=1, hard_skils=request.POST['hard_skils'], 
+        add_interview_data(id_process=id_process, id_worker=1, hard_skils=request.POST['hard_skils'], 
                             soft_skils=request.POST["soft_skils"], grade=request.POST["grade"], notes=request.POST['notes']) 
         return redirect('interview_summary_page',id_process=id_process)
 
@@ -339,3 +339,12 @@ def add_tests_page(request,id_role):
     return render(request, 'addtests.html',{'processes':processes, 'role':role})
 
 
+
+
+def supervisor_page(request):
+
+    if(request.method=='POST'):
+       return redirect(interview_summary_page,id_process=int(request.POST['process'])) 
+
+    tests_with_processes = Tests.objects.all()
+    return render(request,'supervisor.html',{'tests_with_processes':tests_with_processes})
