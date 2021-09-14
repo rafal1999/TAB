@@ -15,3 +15,5 @@ def return_test(id_role):
 							ID_Candidates_Role=id_role).values_list('ID',flat=True))
 	return tests
 
+def list_tests():
+	return Tests.objects.all()

@@ -20,6 +20,7 @@ import Site.api.workers         as WorkersAPI
 import Site.api.calendar        as Calendar
 import Site.api.candidates      as CandidatesAPI
 import Site.api.tests           as tests
+import Site.api.interviews      as InterviewsAPI
 from Site.models                import Workers, Recruitment_Process, Candidates_Role, Recruitment_Meetings
 from django                     import forms      
 from Site.forms                 import MeetingTypeForm
@@ -235,7 +236,7 @@ def add_interview_data_page(request,id_process):
         return redirect('interview_summary_page',id_process=id_process)
    
     if(request.method=='POST'):
-        CandidatesAPI.add_interview_data(id_process=id_process, id_worker=1, hard_skils=request.POST['hard_skils'], 
+        InterviewsAPI.add_interview_data(id_process=id_process, id_worker=1, hard_skils=request.POST['hard_skils'], 
                             soft_skils=request.POST["soft_skils"], grade=request.POST["grade"], notes=request.POST['notes']) 
         return redirect('interview_summary_page',id_process=id_process)
 
@@ -337,5 +338,21 @@ def add_tests_page(request,id_role):
             return redirect(recruiter_start_page)
 
     return render(request, 'addtests.html',{'processes':processes, 'role':role})
+
+class interviews(LoginRequiredMixin, View):
+    template = 'interviews.html'
+    login_url = '/login'
+
+    def get(self, request):
+        candidates = CandidatesAPI.list_candidates()
+        processes = CandidatesAPI.list_processes()
+        interviews = InterviewsAPI.list_interviews()
+        _tests = tests.list_tests()
+        worker = None
+        if request.user.is_authenticated:
+            worker = WorkersAPI.get_worker_by_user_id(request.user.id)
+        selected = 0
+        return render(request, self.template, {'candidates':candidates, 'selected':selected, 'worker':worker, 'processes':processes, 'interviews':interviews, 'tests':_tests}) 
+
 
 
