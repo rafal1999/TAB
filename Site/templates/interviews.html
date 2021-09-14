@@ -35,32 +35,36 @@
 
 <div class= "row">
     <div class="col-sm">
-        <table id="table_db" class="table table-bordered table-hover" style="width: 100%">
+        <table id="table_db" class="table table-bordered table-hover" style="width: 50%">
             <thead>
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Surname</th>
-                    <th scope="col">Birthdate</th>
-                    <th scope="col">Sex</th>
-                    <th scope="col">Application date</th>
-                    <th scope="col">Phone number</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Motivational letter</th>
-                    <th scope="col">CV</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Interview grade</th>
+                    <th scope="col">Test points</th>
                 </tr>
             </thead>
             <tbody >
-                {% for c in candidates %}
-                        <tr onclick="select({{c.ID}})"> 
-                        <td>{{c.Name}}</td>
-                        <td>{{c.Surname}}</td> 
-                        <td>{{c.Birthdate}}</td>
-                        <td>{{c.Sex}}</td>
-                        <td>{{c.Application_date}}</td>
-                        <td>{{c.Phone_number}}</td>
-                        <td>{{c.Email_address}}</td>
-                        <td>{{c.Motivation_letter}}</td>
-                        <td>{{c.CV}}</td></tr>
+                {% for p in processes %}
+                        <tr onclick="select({{p.ID}})"> 
+                        <td>{{p.ID_Candidates.Name}}</td>
+                        <td>{{p.ID_Candidates.Surname}}</td> 
+                        <td>{{p.ID_Candidates_Role.Name}}</td>
+                        <td style='text-align: center'>
+                        {%for i in interviews%}
+                            {% if i.ID_Recruitment_Process == p %}
+                                {{i.Grade}}
+                            {%endif%}
+                        {%endfor%}
+                        </td>
+                        <td style='text-align: center'>
+                        {%for t in tests%}
+                            {% if t.ID_Recruitment_Process == p %}
+                                {{t.Points}}
+                            {%endif%}
+                        {%endfor%}
+                        </td>
                 {% endfor %}
             </tbody> 
         </table>
@@ -69,13 +73,10 @@
 
 <p hidden id="curr"></p>
 
-{% if worker.ID_Workers_Role.Name == "Assistant" %}
-<button id="bAdd" onclick="Add()">Add candidate</button>
-<button id="bEdit" onclick="edit()">Edit</button>
-<button id="bDelete" onclick="Delete()">Delete</button>
+<button id="bInterview" onclick="Interview()">Start interview</button>
+<button id="bShowInterview" onclick="ShowInterview()">Show interview data</button>
 <br></br>
-<button id="bAddProcess" onclick="AddProcess()">Add process</button>
-{% endif %}
+<button id="bAddMark" onclick="AddMark()">Set test score</button>
 
 {% endblock content %}
  
@@ -88,62 +89,56 @@
     function select(pk) {
         if (document.getElementById('curr').innerHTML == pk)
             pk = 0;
-       document.getElementById('curr').innerHTML = pk;
+
+        document.getElementById('curr').innerHTML = pk;
     }
 </script>
 
 <script>
-    function Add()
-    {
-        window.location.href = "addcandidate/";
-    }
-</script>
-
-<script>
-    function AddProcess()
-    {
-        window.location.href = "addprocess/";
-    }
-</script>
-
-<script>
-    function edit()
+    function AddMark()
     {
         curr = document.getElementById('curr').innerHTML;
         if (curr == 0)
             return;
-        window.location.href = "editcandidate/" + document.getElementById('curr').innerHTML;
+        window.location.href = "/recruiter/addtests/" + document.getElementById('curr').innerHTML;
     }
 </script>
 
 <script>
-    function Delete()
+    function Interview()
     {
         curr = document.getElementById('curr').innerHTML;
         if (curr == 0)
             return;
-        if (confirm("Delete candidate?"))
-            window.location.href = "delete/" + document.getElementById('curr').innerHTML;
+        window.location.href = "/interview/" + document.getElementById('curr').innerHTML;
     }
 </script>
- 
+
+<script>
+    function ShowInterview()
+    {
+        curr = document.getElementById('curr').innerHTML;
+        if (curr == 0)
+            return;
+        for (i in "{{interviews}}") {
+            if (curr == i.ID_Recruitment_Process.ID)
+                window.location.href = "/interview/interview_summary/" + curr;
+        }
+    }
+</script>
+
 <script>
     $(document).ready(function () {
     var t = $('#table_db').DataTable( {
         "paging": true,
         "searching": true,
-        "autoWidth": false,
+        "autoWidth": true,
         "ordering": true,
         "columnDefs": [
             {"width": "200px", "targets": 0},
             {"width": "200px", "targets": 1},
-            {"width": "100px", "targets": 2},
-            {"width": "30px" , "targets": 3},
-            {"width": "150px", "targets": 4},
-            {"width": "150px", "targets": 5},
-            {"width": "200px", "targets": 6},
-            {"width": "300px", "targets": 7},
-            {"width": "300px", "targets": 8},
+            {"width": "140px", "targets": 2},
+            {"width": "120px" , "targets": 3},
         ],
         "order": [[0, "desc"]]
     });

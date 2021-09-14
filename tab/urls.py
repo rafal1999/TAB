@@ -49,6 +49,7 @@ urlpatterns = [
     path('recruiter/addtests/<int:id_role>',views.add_tests_page,name='add_tests_page'),
     path('recruiter/choosecandidate/<int:id_role>',views.choose_interview_candidate,name='add_tests_page'),
     path('supervisor/',views.supervisor_page, name='supervisor_page'),
+    path('interviews/', views.interviews.as_view(), name='interviews'),
 ]
 
 

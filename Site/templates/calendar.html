@@ -22,6 +22,9 @@
                         <li class="nav-item">
                             <a href="/candidates" class="nav-link">Candidates</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/interviews" class="nav-link">Interviews</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -85,6 +88,8 @@
 
 <script>
     function select(pk) {
+        if (document.getElementById('curr').innerHTML == pk)
+            pk = 0;
        document.getElementById('curr').innerHTML = pk;
     }
 </script>
@@ -150,7 +155,7 @@
             {"width": "200px", "targets": 1},
             {"width": "600px", "targets": 2},
         ],
-        "order": [[0, "desc"]]
+        "order": [[0, "asc"]]
     });
 
     $('#table_db tbody').on( 'click', 'tr', function () {
