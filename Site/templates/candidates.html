@@ -93,14 +93,14 @@
 <script>
     function Add()
     {
-        window.location.href = "candidates/addcandidate/";
+        window.location.href = "addcandidate/";
     }
 </script>
 
 <script>
     function AddProcess()
     {
-        window.location.href = "candidates/addprocess/";
+        window.location.href = "addprocess/";
     }
 </script>
 
@@ -110,7 +110,7 @@
         curr = document.getElementById('curr').innerHTML;
         if (curr == 0)
             return;
-        window.location.href = "candidates/editcandidate/" + document.getElementById('curr').innerHTML;
+        window.location.href = "editcandidate/" + document.getElementById('curr').innerHTML;
     }
 </script>
 
@@ -121,7 +121,7 @@
         if (curr == 0)
             return;
         if (confirm("Delete candidate?"))
-            window.location.href = "candidates/delete/" + document.getElementById('curr').innerHTML;
+            window.location.href = "delete/" + document.getElementById('curr').innerHTML;
     }
 </script>
  
