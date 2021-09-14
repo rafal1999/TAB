@@ -249,6 +249,10 @@ def add_interview_data_page(request,id_process):
 
 def interview_summary_page(request, id_process):
 
+    asd = Recruitment_Meetings.objects.filter(ID_Recruitment_Process=id_process)
+    if not asd.exists():
+        return redirect('interviews')
+
     process = Recruitment_Process.objects.get(ID=id_process)
     candidate=Candidates.objects.get(ID=process.ID_Candidates.ID)
     role = Candidates_Role.objects.get(ID=process.ID_Candidates_Role.ID)   
