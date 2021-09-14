@@ -121,7 +121,7 @@
         if (curr == 0)
             return;
         for (i in "{{interviews}}") {
-            //if (curr == i.ID_Recruitment_Process.ID)
+            if (curr == i.ID_Recruitment_Process.ID)
                 window.location.href = "/interview/interview_summary/" + curr;
         }
     }
