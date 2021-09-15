@@ -234,13 +234,18 @@ def add_interview_data_page(request,id_process):
 
     if (check_if_interview_took_place(id_process=id_process)):
         return redirect('interview_summary_page',id_process=id_process)
-   
+    
+    process = Recruitment_Process.objects.get(ID=id_process)
+
+    if (process.Stage == '1'):
+        return redirect('interviews')
+
     if(request.method=='POST'):
         InterviewsAPI.add_interview_data(id_process=id_process, id_worker=1, hard_skils=request.POST['hard_skils'], 
                             soft_skils=request.POST["soft_skils"], grade=request.POST["grade"], notes=request.POST['notes']) 
         return redirect('interview_summary_page',id_process=id_process)
 
-    process = Recruitment_Process.objects.get(ID=id_process)
+    
     candidate=Candidates.objects.get(ID=process.ID_Candidates.ID)
     role = Candidates_Role.objects.get(ID=process.ID_Candidates_Role.ID)
 
@@ -249,8 +254,8 @@ def add_interview_data_page(request,id_process):
 
 def interview_summary_page(request, id_process):
 
-    asd = Recruitment_Meetings.objects.filter(ID_Recruitment_Process=id_process)
-    if not asd.exists():
+    process = Recruitment_Meetings.objects.filter(ID_Recruitment_Process=id_process)
+    if not process.exists():
         return redirect('interviews')
 
     process = Recruitment_Process.objects.get(ID=id_process)
@@ -309,7 +314,7 @@ def recruiter_role_page(request,id_role):
     procesess_without_tests = Recruitment_Process.objects.filter(Stage=1, ID_Candidates_Role=role)
     if(request.method=='POST'):
         if(request.POST['form_type']=='addtest'):
-            return redirect(add_tests_page,id_role=id_role)
+            return redirect(add_tests_page,id_process=id_role)
         if(request.POST['form_type']=='startinterview'):
             return redirect(choose_interview_candidate,id_role=id_role)
         if(request.POST['form_type']=='showinterview'):
@@ -328,20 +333,18 @@ def choose_interview_candidate(request,id_role):
 
 def add_tests_page(request,id_process):
 
-    processes = list_processes_without_tests_by_role(id_role=id_role)
-    role = Candidates_Role.objects.get(ID=id_role)
+    processes = Recruitment_Process.objects.filter(ID=id_process)
+    test = Tests.objects.filter(ID_Recruitment_Process=id_process)
+    if (test.exists()):
+        return redirect('interviews')
     if(request.method=='POST'):
         if(request.POST['form_type']=='addform'):
-            processes_id_list=processes.values_list('ID',flat=True)
-            for i in processes_id_list :
-                print(request.POST[f'{i}'])
-                if request.POST[f'{i}'] != '' :
-                    p=int(request.POST[f'{i}'])
-                    tests.add_test(id_process=i, id_worker=1, points=p)
+            tests.add_test(id_process=id_process, id_worker= WorkersAPI.get_worker_by_user_id(request.user.id).ID
+                            ,points=int(request.POST['grade']))
+            return redirect('interviews')
         if(request.POST['form_type']=='backform'):
             return redirect(recruiter_start_page)
-
-    return render(request, 'addtests.html',{'processes':processes, 'role':role})
+    return render(request, 'addtests.html',{'processes':processes})
 
 class interviews(LoginRequiredMixin, View):
     template = 'interviews.html'
