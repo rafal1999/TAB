@@ -1,40 +1,71 @@
-
 {% extends 'base.html' %}
 {% load static %}
  
 {% block content %}
 
-<h1>Summary</h1>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href=" {% static 'home/css/bootstrap.css' %}"
+/>
 
 
+<html>
+  <title>Candidates recruitment system</title>
+    <body style="background-color:ivory">
+        <nav class="navbar fixed-top navbar-dark bg-primary navbar-expand-lg" style="height: 50px" >
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Logo</a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="/calendar/" class="nav-link">Calendary</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/candidates" class="nav-link" >Candidates</a>
+                        </li>
 
+                        <li class="nav-item">
+                            <a href="/interviews" class="nav-link" style="color: ivory;">Interviews</a>
+                        </li>
+                        <li class="nav-item" >
+                            <a class="nav-link" style="font-style: italic; " >Summary</a>
+                          </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>   
+        <nav class="navbar fixed-bottom navbar-dark bg-primary " style="height: 50px" ></nav>
+<br><br>
+        <center>
+            <h1>{{candidate.Name}} {{candidate.Surname}}</h1>
+       <br><br>
+        <div class="container">
 
-<center>
-    <h1>{{candidate.Name}} {{candidate.Surname}} Interview Role: {{role.Name}} </h1>    
-    <table>
-        <tr>
-            <th>Hard skills: </th>
-            <th>{{interview_data.Hard_skills}}</th>
-        </tr>
-        <tr>
-            <th>Soft skills</th>
-            <th>{{interview_data.Soft_skills}}</th>
-        </tr>
-        <tr>
-            <th>notes</th>
-            <th>{{interview_data.Notes}}</th>
-        </tr>
-        <tr>
-            <th>grade</th>
-            <th>{{interview_data.Grade}}</th>
-        </tr>
-        
-    </table>      
-      
-</center>
-<form method="POST" id="backform">
-    {% csrf_token %}
-    <input type="hidden" name="form_type" value="backform">
-    <button>back</button>
-</form>
+            <table class="table table-sm" style="width:70%;">
+                    <tr>
+                        <th scope="row">Interview Role:</th>
+                        <td>{{role.Name}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Hard skils:</th>
+                        <td>{{interview_data.Hard_skills}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Soft skills:</th>
+                        <td>{{interview_data.Soft_skills}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Notes:</th>
+                        <td>{{interview_data.Notes}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Grade:</th>
+                        <td>{{interview_data.Grade}}</td>
+                    </tr>
+            </table>
+        </center>
+        </div>
+</body>
+</html>
 {% endblock content %}
