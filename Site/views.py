@@ -28,35 +28,35 @@ from Site.forms                 import MeetingTypeForm
 from django.contrib.auth.models import User
 # Create your views here.
 
-def test_workers_page(request):
-    if_create=False
-    if request.method=="POST":
-        y=int(request.POST['worker_year_of_birth'])
-        m=int(request.POST['worker_month_of_birth'])
-        d=int(request.POST['worker_month_of_birth'])
-        worker_role=request.POST['worker_role']
-        add_worker(name=request.POST['worker_name'], surname=request.POST['worker_surname'], birthday=date(y,m,d), worker_role=worker_role)
-    workers = Workers.objects.all()# tabele się łączą automatycznie jeśli mają powiązanie,
+# def test_workers_page(request):
+#     if_create=False
+#     if request.method=="POST":
+#         y=int(request.POST['worker_year_of_birth'])
+#         m=int(request.POST['worker_month_of_birth'])
+#         d=int(request.POST['worker_month_of_birth'])
+#         worker_role=request.POST['worker_role']
+#         add_worker(name=request.POST['worker_name'], surname=request.POST['worker_surname'], birthday=date(y,m,d), worker_role=worker_role)
+#     workers = Workers.objects.all()# tabele się łączą automatycznie jeśli mają powiązanie,
     
-    return render(request,'testworkers.html', {'workers':workers})
+    # return render(request,'testworkers.html', {'workers':workers})
 
-# def home_page(request):
-#     return render(request,'home.html')
+def home_page(request):
+    return render(request,'home.html')
 
-def test_candidates_page(request):
+# def test_candidates_page(request):
 
-    if request.method=="POST":
-        y=int(request.POST['candidate_year_of_birth'])
-        m=int(request.POST['candidate_month_of_birth'])
-        d=int(request.POST['candidate_month_of_birth'])
-        add_candidate(name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
-                        birthday=date(y,m,d), phone_number=request.POST['candidate_phone_number'],
-                        sex=request.POST['candidate_sex'], email='test@m.com',cv='pass',motivation_letter='pas',
-                        hired='P')
+#     if request.method=="POST":
+#         y=int(request.POST['candidate_year_of_birth'])
+#         m=int(request.POST['candidate_month_of_birth'])
+#         d=int(request.POST['candidate_month_of_birth'])
+#         add_candidate(name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
+#                         birthday=date(y,m,d), phone_number=request.POST['candidate_phone_number'],
+#                         sex=request.POST['candidate_sex'], email='test@m.com',cv='pass',motivation_letter='pas',
+#                         hired='P')
 
-    candidates = list_candidates()
+#     candidates = list_candidates()
     
-    return render(request,'testcandidates.html', {'candidates':candidates})
+#     return render(request,'testcandidates.html', {'candidates':candidates})
 
 def test_calendar_page(request):
     
@@ -225,7 +225,7 @@ def edit_candidate_page(request,id_candidate):
                         cv=request.POST['candidate_cv'],motivation_letter=request.POST['candidate_motivation_letter'],)
         candidate=Candidates.objects.get(ID=id_candidate)
         candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d") 
-        return render(request,'editcandidate.html',{'candidate':candidate})
+        return redirect('candidates')
    
     candidate=Candidates.objects.get(ID=id_candidate)
     candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d")
@@ -297,13 +297,18 @@ def add_candidate_page(request):
     return render(request,"addcandidate.html") 	
 
 def add_process_page(request,id_candidate):
-
+    id_all_roles= Candidates_Role.objects.all().values_list('ID',flat=True)
     roles=list_candidate_available_roles(id_candidate=id_candidate)
+    candidate = Candidates.objects.get(ID=id_candidate)
     if(request.method=='POST'):
-        add_process(id_candidate=id_candidate, id_role=request.POST['role'])
+        for i in id_all_roles: 
+            try:
+                add_process(id_candidate=id_candidate, id_role=request.POST[f'{i}'])
+            except:
+                pass
         return redirect('candidates')
 
-    return render(request,'addprocess.html',{'roles':roles})
+    return render(request,'addprocess.html',{'roles':roles,'candidate':candidate})
 
 def process_sumary_page(request):
     pass
@@ -349,7 +354,7 @@ def add_tests_page(request,id_process):
                             ,points=int(request.POST['grade']))
             return redirect('interviews')
         if(request.POST['form_type']=='backform'):
-            return redirect(recruiter_start_page)
+            return redirect('interviews')
     return render(request, 'addtests.html',{'processes':processes})
 
 class interviews(LoginRequiredMixin, View):

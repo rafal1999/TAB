@@ -19,8 +19,6 @@ from Site import views
 
 urlpatterns = [
     path('', views.Home.as_view(), name='home'),
-    path('testworkers/', views.test_workers_page, name='testworkers'),
-    path('testcandidates/',views.test_candidates_page, name='testcandidates'),
     path('testcalendar/', views.test_calendar_page, name='testcalendar'),
     path('index/', views.Index.as_view(), name='index'),
     path('admin/', admin.site.urls),
@@ -43,7 +41,6 @@ urlpatterns = [
     path('candidates/addprocess/<int:id_candidate>',views.add_process_page,name='add_process_page'),
     path('candidates/delete/<int:id>', views.delete_candidate, name='deletecandidate'),
     path('candidates/', views.candidates.as_view(), name='candidates'),
-    path('/editcandidate/<int:id_candidate>', views.edit_candidate_page,name='edit_candidate_page'),
     path('recruiter/',views.recruiter_start_page,name='recruiter_start_page'),
     path('recruiter/<int:id_role>',views.recruiter_role_page,name='recruiter_role_page'),
     path('recruiter/addtests/<int:id_process>',views.add_tests_page,name='add_tests_page'),
