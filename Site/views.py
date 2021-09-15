@@ -285,7 +285,7 @@ def add_candidate_page(request):
     if request.method=="POST":
         add_candidate(name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
                         birthday=request.POST['candidate_birthdate'], phone_number=request.POST['candidate_phone_number'],
-                        sex=request.POST['candidate_sex'], email='test@m.com',cv='pass',motivation_letter='pas',
+                        sex=request.POST['candidate_sex'], email=request.POST['candidate_email'],cv='pass',motivation_letter='pas',
                         hired='P')
         return redirect('candidates')
 
