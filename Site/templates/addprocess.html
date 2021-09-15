@@ -5,12 +5,6 @@
     
     <form method="POST">
         {% csrf_token %}
-        select a candidate:
-        <select name="candidate" id="id_candidate">
-            {% for c in candidates%}  
-            <option  value="{{c.ID}}">{{c.Name}} {{c.Surname}}</option>
-            {% endfor %}
-        </select>
         role:
         <select name="role" id="id_role">
             {% for r in roles%}  

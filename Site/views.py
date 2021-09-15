@@ -14,7 +14,8 @@ from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth        import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from Site.api.candidates        import (list_candidates, add_candidate, list_candidates_roles, add_process, 
-                                        list_processes_by_role, list_processes_without_tests_by_role, list_processes_by_role_and_stage)
+                                        list_processes_by_role, list_processes_without_tests_by_role, list_processes_by_role_and_stage,
+                                        list_candidate_available_roles)
 from Site.api.interviews        import check_if_interview_took_place, add_interview_data
 import Site.api.workers         as WorkersAPI
 import Site.api.calendar        as Calendar
@@ -241,8 +242,11 @@ def add_interview_data_page(request,id_process):
         return redirect('interviews')
 
     if(request.method=='POST'):
-        InterviewsAPI.add_interview_data(id_process=id_process, id_worker=1, hard_skils=request.POST['hard_skils'], 
-                            soft_skils=request.POST["soft_skils"], grade=request.POST["grade"], notes=request.POST['notes']) 
+        InterviewsAPI.add_interview_data(id_process=id_process, 
+                                        id_worker=WorkersAPI.get_worker_by_user_id(request.user.id).ID,
+                                        hard_skils=request.POST['hard_skils'], 
+                                       soft_skils=request.POST["soft_skils"], grade=request.POST["grade"],
+                                        notes=request.POST['notes']) 
         return redirect('interview_summary_page',id_process=id_process)
 
     
@@ -294,7 +298,7 @@ def add_candidate_page(request):
 
 def add_process_page(request,id_candidate):
 
-    roles=list_candidates_roles()
+    roles=list_candidate_available_roles(id_candidate=id_candidate)
     if(request.method=='POST'):
         add_process(id_candidate=id_candidate, id_role=request.POST['role'])
         return redirect('candidates')

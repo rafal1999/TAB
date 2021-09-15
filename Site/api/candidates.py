@@ -27,8 +27,14 @@ def list_candidates():
 def list_candidates_roles():
     return Candidates_Role.objects.all()
 
-def list_candidate_available_roles():
-    pass
+def list_candidate_available_roles(id_candidate):
+    processes = Recruitment_Process.objects.filter(ID_Candidates=Candidates.objects.get(ID=id_candidate),)
+    id_roles_candidate=processes.values_list("ID_Candidates_Role",flat=True)
+    id_roles=Candidates_Role.objects.all().values_list('ID',flat=True)
+    id_free_roles_for_candidate = [item for item in  id_roles if 
+                                            item not in id_roles_candidate]
+    return Candidates_Role.objects.filter(ID__in=id_free_roles_for_candidate)
+    
 
 def delete_candidate(id):
     Candidates.objects.filter(pk=id).delete()
