@@ -1,53 +1,106 @@
-<html>
-
-<h1>edit candidates</h1>
-
-<center>
-
-
-
-    <form method="POST">
-            {% csrf_token %}
-     <table>
-  <tr>
-    <th>Name:</th>
-    <th><input name="candidate_name" id="id_worker_name" value="{{candidate.Name}}"/></th>
-  </tr>
-  <tr>
-    <th>Surname:</th>
-    <th><input name="candidate_surname" id="id_worker_name" value="{{candidate.Surname}}"/></th>
-  </tr>
-  <tr>
-    <th>Birthdate:</th>
-    <th><input type="date"  name="candidate_birthdate" id="id_worker_name" value="{{candidate.Birthdate}}"/></th>
-  </tr>
-  <tr>
-    <th>Phone number:</th>
-    <th><input name="candidate_phone_number" id="id_worker_name" value="{{candidate.Phone_number}}"/></th>
-  </tr>
-  <tr>
-    <th>Sex:</th>
-    <th><input name="candidate_sex" id="id_worker_name" value="{{candidate.Sex}}"/></th>
-  </tr>
-  <tr>
-    <th>E-mail:</th>
-    <th><input name="candidate_email" id="id_worker_name" value="{{candidate.Email_address}}"/></th>
-  </tr>
-  <tr>
-    <th>CV:</th>
-    <th><input name="candidate_cv" id="id_worker_name" value="{{candidate.CV}}"/></th>
-  </tr>
-  <tr>
-    <th>Motivation letter:</th>
-    <th><input name="candidate_motivation_letter" id="id_worker_name" value="{{candidate.Motivation_letter}}"/></th>
-  </tr>
-</table> 
-  <button>save</button>
- </form>
- <form  method="PUT" action='/editcandidate/{{candidate.ID}}'>
-    <button>Reload</button>
-  </form>
+{% extends 'base.html' %}
+{% load static %}
  
-</center>
+{% block content %}
 
+<link
+  rel="stylesheet"
+  type="text/css"
+  href=" {% static 'home/css/bootstrap.css' %}"
+/>
+
+<html>
+  <title>Candidates recruitment system</title>
+    <body style="background-color:ivory">
+        <nav class="navbar fixed-top navbar-dark bg-primary navbar-expand-lg" style="height: 50px" >
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Logo</a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="/calendar/" class="nav-link">Calendary</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/candidates" class="nav-link" style="color: ivory;">Candidates</a>
+                        </li>
+                        <li class="nav-item" >
+                          <a class="nav-link disabled" style="font-style: italic" >Edit candidate</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/interviews" class="nav-link">Interviews</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>   
+        <nav class="navbar fixed-bottom navbar-dark bg-primary " style="height: 50px" ></nav>
+
+        <br><br><br><br>
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="container">  
+              <div class="row justify-content-center">
+                  <div class="col-md-4">
+                      <label for="id_worker_name" class="form-label">Name:</label>
+                      <input name="candidate_name" id="id_worker_name" value="{{candidate.Name}}" class="form-control">
+                  </div>  
+                  <div class="col-md-4">
+                    <label for="id_worker_name" class="form-label">Surname:</label>
+                    <input name="candidate_surname" id="id_worker_name" value="{{candidate.Surname}}" class="form-control">
+                  </div>
+                  <div class="col-md-2">
+                    <label for="id_worker_name" class="form-label">Birthdate:</label>
+                    <input type="date" name="candidate_birthdate" id="id_worker_name" value="{{candidate.Birthdate}}" class="form-control" >
+                  </div>
+                  <div class="col-md-2">
+                    <label for="id_worker_name" class="form-label">Sex:</label>
+                    <select name="candidate_sex" id="id_role" class="form-control">
+                      <option  value="M">Man</option>
+                      <option  value="F">Woman</option>
+                      <option selected value="U">unisex</option>
+                     </select>
+                  </div>
+               </div> 
+              <br>
+
+              <div class="row justify-content-center">
+                <div class="col-md-4">
+                  <label for="id_worker_name" class="form-label">Phone Number:</label>
+                  <input name="candidate_phone_number" id="id_worker_name" value="{{candidate.Phone_number}}" class="form-control"  >
+                </div>
+                <div class="col-md-4">
+                    <label for="id_worker_name" class="form-label">E-mail:</label>
+                    <input name="candidate_email" id="id_worker_name" value="{{candidate.Email_address}}" class="form-control" >
+                </div>
+              </div>
+              <br>
+
+              <div class="row justify-content-center">
+                <div class="col-md-4">
+                  <label for="id_worker_name" class="form-label">CV:</label>
+                  <input name="candidate_cv" id="id_worker_name" value="{{candidate.CV}}" class="form-control" >
+                </div>
+                <div class="col-md-4">
+                  <label for="id_worker_name" class="form-label">Motivation Letter:</label>
+                  <input name="candidate_motivation_letter" id="id_worker_name" value="{{candidate.Motivation_letter}}" class="form-control" >
+                </div>
+              </div>
+              <br><br>
+
+              <div class="d-grid gap-2 col-3 mx-auto">
+                <button class="btn btn-primary">Save</button>
+              </div>
+            </div>
+        </form>
+        <br>
+
+        <form  method="PUT" action='/candidates/editcandidate/{{candidate.ID}}'>
+          <div class="d-grid gap-2 col-3 mx-auto">
+            <button class="btn btn-primary">Reload</button>
+          </div>
+        </form>
+    </body>
 </html>
+
+{% endblock content %}

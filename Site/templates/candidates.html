@@ -102,7 +102,10 @@
 <script>
     function AddProcess()
     {
-        window.location.href = "addprocess/";
+        curr = document.getElementById('curr').innerHTML;
+        if (curr == 0)
+            return;
+        window.location.href = "addprocess/"+ document.getElementById('curr').innerHTML;
     }
 </script>
 

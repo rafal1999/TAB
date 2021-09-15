@@ -6,7 +6,7 @@ from django.shortcuts           import redirect, render
 from django.http                import HttpResponse  
 # from django.db.models.functions import Concat 
 # from django.db.models           import F, Value
-from Site.models                import Candidates, Workers, Workers_Role, Calendar
+from Site.models                import Candidates, Workers, Workers_Role, Calendar, Tests
 from datetime                   import date, datetime
 from Site.api.workers           import add_worker
 from django.views               import View
@@ -14,7 +14,8 @@ from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth        import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from Site.api.candidates        import (list_candidates, add_candidate, list_candidates_roles, add_process, 
-                                        list_processes_by_role, list_processes_without_tests_by_role, list_processes_by_role_and_stage)
+                                        list_processes_by_role, list_processes_without_tests_by_role, list_processes_by_role_and_stage,
+                                        list_candidate_available_roles)
 from Site.api.interviews        import check_if_interview_took_place, add_interview_data
 import Site.api.workers         as WorkersAPI
 import Site.api.calendar        as Calendar
@@ -27,35 +28,35 @@ from Site.forms                 import MeetingTypeForm
 from django.contrib.auth.models import User
 # Create your views here.
 
-def test_workers_page(request):
-    if_create=False
-    if request.method=="POST":
-        y=int(request.POST['worker_year_of_birth'])
-        m=int(request.POST['worker_month_of_birth'])
-        d=int(request.POST['worker_month_of_birth'])
-        worker_role=request.POST['worker_role']
-        add_worker(name=request.POST['worker_name'], surname=request.POST['worker_surname'], birthday=date(y,m,d), worker_role=worker_role)
-    workers = Workers.objects.all()# tabele się łączą automatycznie jeśli mają powiązanie,
+# def test_workers_page(request):
+#     if_create=False
+#     if request.method=="POST":
+#         y=int(request.POST['worker_year_of_birth'])
+#         m=int(request.POST['worker_month_of_birth'])
+#         d=int(request.POST['worker_month_of_birth'])
+#         worker_role=request.POST['worker_role']
+#         add_worker(name=request.POST['worker_name'], surname=request.POST['worker_surname'], birthday=date(y,m,d), worker_role=worker_role)
+#     workers = Workers.objects.all()# tabele się łączą automatycznie jeśli mają powiązanie,
     
-    return render(request,'testworkers.html', {'workers':workers})
+    # return render(request,'testworkers.html', {'workers':workers})
 
-# def home_page(request):
-#     return render(request,'home.html')
+def home_page(request):
+    return render(request,'home.html')
 
-def test_candidates_page(request):
+# def test_candidates_page(request):
 
-    if request.method=="POST":
-        y=int(request.POST['candidate_year_of_birth'])
-        m=int(request.POST['candidate_month_of_birth'])
-        d=int(request.POST['candidate_month_of_birth'])
-        add_candidate(name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
-                        birthday=date(y,m,d), phone_number=request.POST['candidate_phone_number'],
-                        sex=request.POST['candidate_sex'], email='test@m.com',cv='pass',motivation_letter='pas',
-                        hired='P')
+#     if request.method=="POST":
+#         y=int(request.POST['candidate_year_of_birth'])
+#         m=int(request.POST['candidate_month_of_birth'])
+#         d=int(request.POST['candidate_month_of_birth'])
+#         add_candidate(name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
+#                         birthday=date(y,m,d), phone_number=request.POST['candidate_phone_number'],
+#                         sex=request.POST['candidate_sex'], email='test@m.com',cv='pass',motivation_letter='pas',
+#                         hired='P')
 
-    candidates = list_candidates()
+#     candidates = list_candidates()
     
-    return render(request,'testcandidates.html', {'candidates':candidates})
+#     return render(request,'testcandidates.html', {'candidates':candidates})
 
 def test_calendar_page(request):
     
@@ -224,7 +225,7 @@ def edit_candidate_page(request,id_candidate):
                         cv=request.POST['candidate_cv'],motivation_letter=request.POST['candidate_motivation_letter'],)
         candidate=Candidates.objects.get(ID=id_candidate)
         candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d") 
-        return render(request,'editcandidate.html',{'candidate':candidate})
+        return redirect('candidates')
    
     candidate=Candidates.objects.get(ID=id_candidate)
     candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d")
@@ -234,13 +235,21 @@ def add_interview_data_page(request,id_process):
 
     if (check_if_interview_took_place(id_process=id_process)):
         return redirect('interview_summary_page',id_process=id_process)
-   
+    
+    process = Recruitment_Process.objects.get(ID=id_process)
+
+    if (process.Stage == '1'):
+        return redirect('interviews')
+
     if(request.method=='POST'):
-        InterviewsAPI.add_interview_data(id_process=id_process, id_worker=1, hard_skils=request.POST['hard_skils'], 
-                            soft_skils=request.POST["soft_skils"], grade=request.POST["grade"], notes=request.POST['notes']) 
+        InterviewsAPI.add_interview_data(id_process=id_process, 
+                                        id_worker=WorkersAPI.get_worker_by_user_id(request.user.id).ID,
+                                        hard_skils=request.POST['hard_skils'], 
+                                       soft_skils=request.POST["soft_skils"], grade=request.POST["grade"],
+                                        notes=request.POST['notes']) 
         return redirect('interview_summary_page',id_process=id_process)
 
-    process = Recruitment_Process.objects.get(ID=id_process)
+    
     candidate=Candidates.objects.get(ID=process.ID_Candidates.ID)
     role = Candidates_Role.objects.get(ID=process.ID_Candidates_Role.ID)
 
@@ -249,15 +258,17 @@ def add_interview_data_page(request,id_process):
 
 def interview_summary_page(request, id_process):
 
-    asd = Recruitment_Meetings.objects.filter(ID_Recruitment_Process=id_process)
-    if not asd.exists():
+    process = Recruitment_Meetings.objects.filter(ID_Recruitment_Process=id_process)
+    if not process.exists():
         return redirect('interviews')
 
     process = Recruitment_Process.objects.get(ID=id_process)
     candidate=Candidates.objects.get(ID=process.ID_Candidates.ID)
     role = Candidates_Role.objects.get(ID=process.ID_Candidates_Role.ID)   
     interview_data = Recruitment_Meetings.objects.get(ID_Recruitment_Process=process)
-    
+    if(request.method=='POST'):
+        if(request.POST['form_type']=='backform'):
+            return redirect('interviews')
     return render(request,"interview_summary.html",{'candidate':candidate,'role':role,
                 'interview_data': interview_data})
 
@@ -278,21 +289,26 @@ def add_candidate_page(request):
     if request.method=="POST":
         add_candidate(name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
                         birthday=request.POST['candidate_birthdate'], phone_number=request.POST['candidate_phone_number'],
-                        sex=request.POST['candidate_sex'], email='test@m.com',cv='pass',motivation_letter='pas',
+                        sex=request.POST['candidate_sex'], email=request.POST['candidate_email'],
+                        cv=request.POST['candidate_cv'],motivation_letter=request.POST['candidate_motivation_letter'],
                         hired='P')
         return redirect('candidates')
 
     return render(request,"addcandidate.html") 	
 
-def add_process_page(request):
-
-    candidates=list_candidates()
-    roles=list_candidates_roles()
+def add_process_page(request,id_candidate):
+    id_all_roles= Candidates_Role.objects.all().values_list('ID',flat=True)
+    roles=list_candidate_available_roles(id_candidate=id_candidate)
+    candidate = Candidates.objects.get(ID=id_candidate)
     if(request.method=='POST'):
-        add_process(id_candidate=request.POST['candidate'], id_role=request.POST['role'])
+        for i in id_all_roles: 
+            try:
+                add_process(id_candidate=id_candidate, id_role=request.POST[f'{i}'])
+            except:
+                pass
         return redirect('candidates')
 
-    return render(request,'addprocess.html',{'candidates':candidates, 'roles':roles})
+    return render(request,'addprocess.html',{'roles':roles,'candidate':candidate})
 
 def process_sumary_page(request):
     pass
@@ -309,7 +325,7 @@ def recruiter_role_page(request,id_role):
     procesess_without_tests = Recruitment_Process.objects.filter(Stage=1, ID_Candidates_Role=role)
     if(request.method=='POST'):
         if(request.POST['form_type']=='addtest'):
-            return redirect(add_tests_page,id_role=id_role)
+            return redirect(add_tests_page,id_process=id_role)
         if(request.POST['form_type']=='startinterview'):
             return redirect(choose_interview_candidate,id_role=id_role)
         if(request.POST['form_type']=='showinterview'):
@@ -326,22 +342,20 @@ def choose_interview_candidate(request,id_role):
     return render(request,'choosecandidate.html',{'processes':processes})
 
 
-def add_tests_page(request,id_role):
+def add_tests_page(request,id_process):
 
-    processes = list_processes_without_tests_by_role(id_role=id_role)
-    role = Candidates_Role.objects.get(ID=id_role)
+    processes = Recruitment_Process.objects.filter(ID=id_process)
+    test = Tests.objects.filter(ID_Recruitment_Process=id_process)
+    if (test.exists()):
+        return redirect('interviews')
     if(request.method=='POST'):
         if(request.POST['form_type']=='addform'):
-            processes_id_list=processes.values_list('ID',flat=True)
-            for i in processes_id_list :
-                print(request.POST[f'{i}'])
-                if request.POST[f'{i}'] != '' :
-                    p=int(request.POST[f'{i}'])
-                    tests.add_test(id_process=i, id_worker=1, points=p)
+            tests.add_test(id_process=id_process, id_worker= WorkersAPI.get_worker_by_user_id(request.user.id).ID
+                            ,points=int(request.POST['grade']))
+            return redirect('interviews')
         if(request.POST['form_type']=='backform'):
-            return redirect(recruiter_start_page)
-
-    return render(request, 'addtests.html',{'processes':processes, 'role':role})
+            return redirect('interviews')
+    return render(request, 'addtests.html',{'processes':processes})
 
 class interviews(LoginRequiredMixin, View):
     template = 'interviews.html'
@@ -360,3 +374,12 @@ class interviews(LoginRequiredMixin, View):
 
 
 
+
+
+def supervisor_page(request):
+
+    if(request.method=='POST'):
+       return redirect(interview_summary_page,id_process=int(request.POST['process'])) 
+
+    tests_with_processes = Tests.objects.all()
+    return render(request,'supervisor.html',{'tests_with_processes':tests_with_processes})

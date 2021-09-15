@@ -1,0 +1,32 @@
+<html>
+
+    <h1></h1>    
+    
+
+    <center> 
+        <table id="id_table">
+            <tr>
+                <td>Name</td> 
+                <td>Surname</td> 
+                <td>mark </td>
+            </tr> 
+            {% for p in tests_with_processes %}      
+            {% if p.ID_Recruitment_Process.Stage == "3" %}                                                    <!--odcoywanie się do tabel połaczonych nie wprost przez klucz obcy (taka składnia) c.ID_Workers_Role.Name-->
+            <tr>
+                <td>{{p.ID_Recruitment_Process.ID_Candidates.Name}}</td> 
+                <td>{{p.ID_Recruitment_Process.ID_Candidates.Surname}}</td>
+                <td>{{p.ID_Recruitment_Process.ID_Candidates_Role.Name}}</td> 
+                <td> {{p.Points}} </td>
+                <td> <form method="POST" id="showinterview">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="showinterview">
+                    <button name="process" value="{{p.ID_Recruitment_Process.ID}}" type="edit">show interview data</button>
+                    </form>
+                </td>
+            </tr> 
+            {% endif %}
+            {% endfor %}
+        </table>
+    </center>
+  
+</html>
