@@ -291,15 +291,14 @@ def add_candidate_page(request):
 
     return render(request,"addcandidate.html") 	
 
-def add_process_page(request):
+def add_process_page(request,id_candidate):
 
-    candidates=list_candidates()
     roles=list_candidates_roles()
     if(request.method=='POST'):
-        add_process(id_candidate=request.POST['candidate'], id_role=request.POST['role'])
+        add_process(id_candidate=id_candidate, id_role=request.POST['role'])
         return redirect('candidates')
 
-    return render(request,'addprocess.html',{'candidates':candidates, 'roles':roles})
+    return render(request,'addprocess.html',{'roles':roles})
 
 def process_sumary_page(request):
     pass

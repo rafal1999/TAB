@@ -27,6 +27,9 @@ def list_candidates():
 def list_candidates_roles():
     return Candidates_Role.objects.all()
 
+def list_candidate_available_roles():
+    pass
+
 def delete_candidate(id):
     Candidates.objects.filter(pk=id).delete()
 
