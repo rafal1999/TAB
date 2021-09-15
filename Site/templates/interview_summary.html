@@ -32,4 +32,9 @@
     </table>      
       
 </center>
+<form method="POST" id="backform">
+    {% csrf_token %}
+    <input type="hidden" name="form_type" value="backform">
+    <button>back</button>
+</form>
 {% endblock content %}
