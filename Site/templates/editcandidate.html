@@ -55,7 +55,11 @@
                   </div>
                   <div class="col-md-2">
                     <label for="id_worker_name" class="form-label">Sex:</label>
-                    <input name="candidate_sex" id="id_worker_name" value="{{candidate.Sex}}" class="form-control" >
+                    <select name="candidate_sex" id="id_role" class="form-control">
+                      <option  value="M">Man</option>
+                      <option  value="F">Woman</option>
+                      <option selected value="U">unisex</option>
+                     </select>
                   </div>
                </div> 
               <br>
@@ -91,7 +95,7 @@
         </form>
         <br>
 
-        <form  method="PUT" action='candidates/editcandidate/{{candidate.ID}}'>
+        <form  method="PUT" action='/candidates/editcandidate/{{candidate.ID}}'>
           <div class="d-grid gap-2 col-3 mx-auto">
             <button class="btn btn-primary">Reload</button>
           </div>

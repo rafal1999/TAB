@@ -262,7 +262,9 @@ def interview_summary_page(request, id_process):
     candidate=Candidates.objects.get(ID=process.ID_Candidates.ID)
     role = Candidates_Role.objects.get(ID=process.ID_Candidates_Role.ID)   
     interview_data = Recruitment_Meetings.objects.get(ID_Recruitment_Process=process)
-    
+    if(request.method=='POST'):
+        if(request.POST['form_type']=='backform'):
+            return redirect('interviews')
     return render(request,"interview_summary.html",{'candidate':candidate,'role':role,
                 'interview_data': interview_data})
 
