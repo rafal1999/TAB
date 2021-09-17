@@ -1,21 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+ 
+{% block content %}
+
+<link
+  rel="stylesheet"
+  type="text/css"
+  href=" {% static 'home/css/bootstrap.css' %}"
+/>
 
 <html>
+    <title>Candidates recruitment system</title>
+    <body style="background-color:ivory">
+        <nav class="navbar fixed-top navbar-dark bg-primary navbar-expand-lg" style="height: 50px" >
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Logo</a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="/calendar/" class="nav-link">Calendary</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/candidates" class="nav-link" style="color: ivory;">Candidates</a>
+                        </li>
+                        <li class="nav-item" >
+                          <a class="nav-link disabled" style="font-style: italic" >Add process</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/interviews" class="nav-link">Interviews</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>   
+        <nav class="navbar fixed-bottom navbar-dark bg-primary " style="height: 50px" ></nav>
 
-    <h1>Add processes for candidate: {{candidate.Name}} {{candidate.Surname}} </h1>    
-    
-    <form method="POST">
-        {% csrf_token %}
-        {% if roles %}
-        role:
-            {% for r in roles%}  
-            <input type="checkbox" id="{{r.ID}}" name="{{r.ID}}" value="{{r.ID}}">
-            <label for="{{r.ID}}"> {{r.Name}}</label><br>
+        <center>
+            <br><br>
+            <h1> {{candidate.Name}} {{candidate.Surname}} </h1>    
+        </center>
+        <br><br>
+        
+        <fieldset style=" text-align: center; " >
+            <legend style="padding: 10px;">Candidate role:</legend>
+                <form method="POST">
+                    {% csrf_token %}
+                    {% if roles %}
+                    
+                        {% for r in roles%}  
+                        <input type="checkbox" id="{{r.ID}}" name="{{r.ID}}" value="{{r.ID}}">
+                        <label for="{{r.ID}}"> {{r.Name}}</label><br>
 
-            {% endfor %}
-        {% endif %}
-        {% if not roles %}
-            candidate take part in all possible recruitment process
-        {% endif %}
-        <button>OK</button>
-    </form>
+                        {% endfor %}
+                    {% endif %}
+                    {% if not roles %}
+                        candidate take part in all possible recruitment process
+                    {% endif %}
+                    <br>
+                    <button class="btn btn-primary">Save</button>
+                </form>
+        </fieldset>
+        
 </html>
+
+{% endblock content %}
