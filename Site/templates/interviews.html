@@ -23,7 +23,7 @@
                             <a href="/candidates" class="nav-link">Candidates</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/interviews" class="nav-link">Interviews</a>
+                            <a href="/interviews" class="nav-link" style="color: ivory;">Interviews</a>
                         </li>
                     </ul>
                 </div>
@@ -73,10 +73,10 @@
 
 <p hidden id="curr"></p>
 
-<button id="bInterview" onclick="Interview()">Start interview</button>
-<button id="bShowInterview" onclick="ShowInterview()">Show interview data</button>
+<button class="btn btn-primary" id="bInterview" onclick="Interview()">Start interview</button>
+<button class="btn btn-primary" id="bShowInterview" onclick="ShowInterview()">Show interview data</button>
 <br></br>
-<button id="bAddMark" onclick="AddMark()">Set test score</button>
+<button class="btn btn-primary" id="bAddMark" onclick="AddMark()">Set test score</button>
 
 {% endblock content %}
  

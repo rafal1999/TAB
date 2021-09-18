@@ -20,7 +20,7 @@
                             <a href="/calendar/" class="nav-link">Calendary</a>
                         </li>
                         <li class="nav-item">
-                            <a href="/candidates" class="nav-link">Candidates</a>
+                            <a href="/candidates" class="nav-link" style="color: ivory;">Candidates</a>
                         </li>
                         <li class="nav-item">
                             <a href="/interviews" class="nav-link">Interviews</a>
@@ -70,11 +70,11 @@
 <p hidden id="curr"></p>
 
 {% if worker.ID_Workers_Role.Name == "Assistant" %}
-<button id="bAdd" onclick="Add()">Add candidate</button>
-<button id="bEdit" onclick="edit()">Edit</button>
-<button id="bDelete" onclick="Delete()">Delete</button>
+<button class="btn btn-primary" id="bAdd" onclick="Add()">Add candidate</button>
+<button class="btn btn-primary" id="bEdit" onclick="edit()">Edit</button>
+<button class="btn btn-primary" id="bDelete" onclick="Delete()">Delete</button>
 <br></br>
-<button id="bAddProcess" onclick="AddProcess()">Add process</button>
+<button class="btn btn-primary" id="bAddProcess" onclick="AddProcess()">Add process</button>
 {% endif %}
 
 {% endblock content %}
