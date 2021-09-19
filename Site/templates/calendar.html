@@ -17,7 +17,7 @@
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a href="/calendar/" class="nav-link">Calendary</a>
+                            <a href="/calendar/" class="nav-link" style="color: ivory;">Calendary</a>
                         </li>
                         <li class="nav-item">
                             <a href="/candidates" class="nav-link">Candidates</a>
@@ -67,15 +67,15 @@
 <p hidden id="curr"></p>
 
 {% if worker.ID_Workers_Role.Name == "Assistant" %}
-<button id="bCreate" onclick="Create()">Create</button>
-<button id="bEdit" onclick="edit()">Edit</button>
-<button id="bDelete" onclick="Delete()">Delete</button>
+<button class="btn btn-primary" id="bCreate" onclick="Create()">Create</button>
+<button class="btn btn-primary" id="bEdit" onclick="edit()">Edit</button>
+<button class="btn btn-primary" id="bDelete" onclick="Delete()">Delete</button>
 
 {% else %}
-<button id="bConfirm" onclick="Confirm()">Confirm</button>
+<button class="btn btn-primary" id="bConfirm" onclick="Confirm()">Confirm</button>
 <p></p>
 <input name="meeting_desc" id="id_meeting_desc" placeholder="Reason"/>
-<button id="bCancel" onclick="cancel()">Cancel</button>
+<button class="btn btn-primary" id="bCancel" onclick="cancel()">Cancel</button>
 {% endif %}
 
 
