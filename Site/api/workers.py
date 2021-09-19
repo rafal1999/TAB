@@ -2,7 +2,7 @@
 from Site.models                import Candidates, Workers, Workers_Role 
 from datetime                   import date
 
-#TODO korekta dużych liter 
+
 def add_worker(name:str,surname:str,birthday,worker_role:str):
     if worker_role=="":
         Workers.objects.create(Name=name,Surname=surname,Birthdate=birthday,ID_Workers_Role=None)
