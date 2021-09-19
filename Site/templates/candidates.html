@@ -70,11 +70,13 @@
 <p hidden id="curr"></p>
 
 {% if worker.ID_Workers_Role.Name == "Assistant" %}
-<button class="btn btn-primary" id="bAdd" onclick="Add()">Add candidate</button>
-<button class="btn btn-primary" id="bEdit" onclick="edit()">Edit</button>
-<button class="btn btn-primary" id="bDelete" onclick="Delete()">Delete</button>
+<button class="btn btn-primary" id="bAdd" onclick="Add()" data-toggle="tooltip" data-placement="top" title="Adding new candidate to recruitment system">Add candidate</button>
+<button class="btn btn-primary" id="bEdit" onclick="edit()" data-toggle="tooltip" data-placement="top" title="Editing data of existing candidate">Edit</button>
+<button class="btn btn-primary" id="bDelete" onclick="Delete()" data-toggle="tooltip" data-placement="top" title="Deleting candidate">Delete</button>
+
 <br></br>
-<button class="btn btn-primary" id="bAddProcess" onclick="AddProcess()">Add process</button>
+<button class="btn btn-primary" id="bAddProcess" onclick="AddProcess()" data-toggle="tooltip" data-placement="top" title="Adding candidate to adequate recruitment process">Add process</button>
+
 {% endif %}
 
 {% endblock content %}
@@ -83,6 +85,12 @@
  
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
 
 <script>
     function select(pk) {
