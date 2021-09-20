@@ -19,8 +19,6 @@ def edit_candidate(id,name,surname,birthday,phone_number,sex,email,cv,
                                 Phone_number=phone_number,Sex=sex,CV=cv,Email_address=email,
                                 Motivation_letter=motivation_letter)
 
-
-
 def list_candidates():
     return Candidates.objects.all() 
 

@@ -217,7 +217,9 @@ def delete_candidate(request, id):
     return response
 
 def hire_candidate(request, id):
-    CandidatesAPI.hire_candidate(id)
+    processes = Recruitment_Process.objects.filter(ID_Candidates=id).filter(Stage=constants.STAGE_THIRD).all()
+    if processes.exists():
+        CandidatesAPI.hire_candidate(id)
     response = redirect('/candidates/')
     return response
 
