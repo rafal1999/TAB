@@ -72,7 +72,7 @@
 </div>
 
 <p hidden id="curr"></p>
-{% if worker.ID_Workers_Role.Name == "Recruiter" %}
+{% if worker.ID_Workers_Role.Name != "Assistant" %}
 <button class="btn btn-primary" id="bInterview" onclick="Interview()">Start interview</button>
 <button class="btn btn-primary" id="bShowInterview" onclick="ShowInterview()">Show interview data</button>
 <br></br>

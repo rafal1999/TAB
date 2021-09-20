@@ -47,6 +47,7 @@
                     <th scope="col">Email</th>
                     <th scope="col">Motivational letter</th>
                     <th scope="col">CV</th>
+                    {% if worker.ID_Workers_Role.Name == "Head" %} <th scope="col">Hired</th>{%endif%}
                 </tr>
             </thead>
             <tbody >
@@ -60,7 +61,8 @@
                         <td>{{c.Phone_number}}</td>
                         <td>{{c.Email_address}}</td>
                         <td> <a href="{{c.Motivation_letter}}">link</a> </td>
-                        <td><a href="{{c.CV}}">link</a></td></tr>
+                        <td><a href="{{c.CV}}">link</a></td>
+                        {% if worker.ID_Workers_Role.Name == "Head" %} <td>{{c.Hired}}</td>{%endif%}</tr>
                 {% endfor %}
             </tbody> 
         </table>
@@ -76,7 +78,9 @@
 
 <br></br>
 <button class="btn btn-primary" id="bAddProcess" onclick="AddProcess()" data-toggle="tooltip" data-placement="top" title="Adding candidate to adequate recruitment process">Add process</button>
-
+{% elif worker.ID_Workers_Role.Name == "Head" %}
+<button class="btn btn-primary" id="bAccept" onclick="Accept()" data-toggle="tooltip" data-placement="top" title="Hiring candidate">Set as hired</button>
+<button class="btn btn-primary" id="bDontAccept" onclick="DontAccept()" data-toggle="tooltip" data-placement="top" title="Not hiring candidate">Set as not hired</button>
 {% endif %}
 
 {% endblock content %}
@@ -97,6 +101,26 @@
         if (document.getElementById('curr').innerHTML == pk)
             pk = 0;
        document.getElementById('curr').innerHTML = pk;
+    }
+</script>
+
+<script>
+    function Accept() {
+        curr = document.getElementById('curr').innerHTML;
+        if (curr == 0)
+            return;
+        if (confirm("Mark this candidate as hired? (This can only be undone by an admin)"))
+            window.location.href = "hire/"+ document.getElementById('curr').innerHTML;
+    }
+</script>
+
+<script>
+    function DontAccept() {
+        curr = document.getElementById('curr').innerHTML;
+        if (curr == 0)
+            return;
+        if (confirm("Mark this candidate as not hired? (This can only be undone by an admin)"))
+            window.location.href = "donthire/"+ document.getElementById('curr').innerHTML;
     }
 </script>
 

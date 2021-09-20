@@ -1,3 +1,4 @@
+from Site import constants
 from Site.models import Candidates, Candidates_Role, Recruitment_Meetings, Tests, Recruitment_Process
 
 
@@ -34,7 +35,6 @@ def list_candidate_available_roles(id_candidate):
     id_free_roles_for_candidate = [item for item in  id_roles if 
                                             item not in id_roles_candidate]
     return Candidates_Role.objects.filter(ID__in=id_free_roles_for_candidate)
-    
 
 def delete_candidate(id):
     Candidates.objects.filter(pk=id).delete()
@@ -77,3 +77,13 @@ def list_candidates_by_role(id_role):
     candidate_ids = Recruitment_Process.objects.filter(ID_Candidates_Role=id_role).values_list('ID_Candidates', flat=True)
     candidates = Candidates.objects.filter(pk__in=candidate_ids)
     return candidates
+
+def hire_candidate(id_candidate):
+    candidate = Candidates.objects.get(pk=id_candidate)
+    candidate.Hired = constants.HIRED_YES
+    candidate.save()
+
+def dont_hire_candidate(id_candidate):
+    candidate = Candidates.objects.get(pk=id_candidate)
+    candidate.Hired = constants.HIRED_NO
+    candidate.save()

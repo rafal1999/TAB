@@ -216,6 +216,16 @@ def delete_candidate(request, id):
     response = redirect('candidates')
     return response
 
+def hire_candidate(request, id):
+    CandidatesAPI.hire_candidate(id)
+    response = redirect('/candidates/')
+    return response
+
+def dont_hire_candidate(request, id):
+    CandidatesAPI.dont_hire_candidate(id)
+    response = redirect('/candidates/')
+    return response
+
 def edit_candidate_page(request,id_candidate):
 
     if(request.method=='POST'):
