@@ -11,9 +11,9 @@ SEX_OPTIONS = (
 STAGE_ZERO   = '0' # kandydat zg�oszony
 STAGE_FIRST  = '1' # test napisany               #TODO mo�e zmieni� na inty w bazie �atwiej sortowa�??
 STAGE_SECOND = '2' # po rozmowie rekrutacyjnej
-STAGE_THIRD  = '3' # po rozmowie finalnej po kt�rej dostaje odp tak/nie 
+STAGE_THIRD  = '3' # po rozmowie finalnej po kt�rej dostaje odp tak/nie
 
-STAGE_OPTIONS = (     #TODO W miejsca 0,1,2 nada� opisy jakie by by�y fajne (to co ma si� wy�wietla�) 
+STAGE_OPTIONS = (     #TODO W miejsca 0,1,2 nada� opisy jakie by by�y fajne (to co ma si� wy�wietla�)
     (STAGE_ZERO, '0'),      #!
     (STAGE_FIRST, '1'),     #!
     (STAGE_SECOND, '2'),    #!

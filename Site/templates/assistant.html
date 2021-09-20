@@ -11,17 +11,17 @@
                 <table id="id_table">
                 {% for c in candidates%}                                                          <!--odcoywanie się do tabel połaczonych nie wprost przez klucz obcy (taka składnia) c.ID_Workers_Role.Name-->
                 <tr>
-                    <td>{{c.Name}}</td> 
+                    <td>{{c.Name}}</td>
                     <td>{{c.Surname}}</td>
-                    <td>{{c.Birthdate}}</td> 
+                    <td>{{c.Birthdate}}</td>
                     <td>{{c.Sex}}</td>
                     <td><button name="candidate" value="{{c.ID}}" type="edit">edit</button>                    </td>
                         <!-- disable</td> -->
-                </tr> 
+                </tr>
                 {% endfor %}
 
                 </table>
-                
+
         </form>
         <form method="POST" id="addform">
             {% csrf_token %}

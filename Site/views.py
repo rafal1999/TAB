@@ -1,10 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.signals import user_logged_in
 from django.db import models
+from django.db.models.aggregates import Avg
 from Site import constants
 from django.shortcuts           import redirect, render
-from django.http                import HttpResponse  
-# from django.db.models.functions import Concat 
+from django.http                import HttpResponse, FileResponse
+# from django.db.models.functions import Concat
 # from django.db.models           import F, Value
 from Site.models                import Candidates, Workers, Workers_Role, Calendar, Tests
 from datetime                   import date, datetime
@@ -13,9 +14,9 @@ from django.views               import View
 from django.contrib.auth.forms  import AuthenticationForm
 from django.contrib.auth        import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
-from Site.api.candidates        import (list_candidates, add_candidate, list_candidates_roles, add_process, 
+from Site.api.candidates        import (list_candidates, add_candidate, list_candidates_roles, add_process,
                                         list_processes_by_role, list_processes_without_tests_by_role, list_processes_by_role_and_stage,
-                                        list_candidate_available_roles)
+                                        list_candidate_available_roles, list_candidates_by_role)
 from Site.api.interviews        import check_if_interview_took_place, add_interview_data
 import Site.api.workers         as WorkersAPI
 import Site.api.calendar        as Calendar
@@ -23,9 +24,11 @@ import Site.api.candidates      as CandidatesAPI
 import Site.api.tests           as tests
 import Site.api.interviews      as InterviewsAPI
 from Site.models                import Workers, Recruitment_Process, Candidates_Role, Recruitment_Meetings
-from django                     import forms      
+from django                     import forms
 from Site.forms                 import MeetingTypeForm
 from django.contrib.auth.models import User
+import reportlab, io
+from reportlab.pdfgen import canvas
 # Create your views here.
 
 # def test_workers_page(request):
@@ -37,7 +40,7 @@ from django.contrib.auth.models import User
 #         worker_role=request.POST['worker_role']
 #         add_worker(name=request.POST['worker_name'], surname=request.POST['worker_surname'], birthday=date(y,m,d), worker_role=worker_role)
 #     workers = Workers.objects.all()# tabele się łączą automatycznie jeśli mają powiązanie,
-    
+
     # return render(request,'testworkers.html', {'workers':workers})
 
 def home_page(request):
@@ -49,25 +52,25 @@ def home_page(request):
 #         y=int(request.POST['candidate_year_of_birth'])
 #         m=int(request.POST['candidate_month_of_birth'])
 #         d=int(request.POST['candidate_month_of_birth'])
-#         add_candidate(name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
+#         add_candidate(name=request.POST['candidate_name'],surname=request.POST['candidate_surname'],
 #                         birthday=date(y,m,d), phone_number=request.POST['candidate_phone_number'],
 #                         sex=request.POST['candidate_sex'], email='test@m.com',cv='pass',motivation_letter='pas',
 #                         hired='P')
 
 #     candidates = list_candidates()
-    
+
 #     return render(request,'testcandidates.html', {'candidates':candidates})
 
 def test_calendar_page(request):
-    
+
     if request.method=="POST":
         myDate = request.POST['date']
-        
-        Calendar.add_meeting(date=datetime.strptime(myDate, "%d/%m/%Y %H:%M"), desc=request.POST['meeting_desc'], 
+
+        Calendar.add_meeting(date=datetime.strptime(myDate, "%d/%m/%Y %H:%M"), desc=request.POST['meeting_desc'],
                     meeting_type='R', worker_ids=Workers.objects.all()[0], recruitment_process_id=Recruitment_Process.objects.all()[0])
     meetings = Calendar.list_meetings()
     f = forms.DateField()
-    
+
     return render(request,'testcalendar.html', {'meetings':meetings, 'form':f})
 
 def create_meeting(request):
@@ -89,8 +92,8 @@ def create_meeting(request):
                 if str(p) == str(processName):
                     processID = p.ID
             process = CandidatesAPI.get_process(processID)
-        
-        Calendar.add_meeting(date=date, desc=request.POST['meeting_desc'], 
+
+        Calendar.add_meeting(date=date, desc=request.POST['meeting_desc'],
                     meeting_type=type, worker_ids=worker, recruitment_process_id=process)
         response = redirect('/calendar/')
         return response
@@ -120,7 +123,7 @@ def edit_meeting(request, id):
                     processID = p.ID
             process = CandidatesAPI.get_process(processID)
 
-        Calendar.edit_meeting(meeting_id = id, date=date, desc=request.POST['meeting_desc'], 
+        Calendar.edit_meeting(meeting_id = id, date=date, desc=request.POST['meeting_desc'],
                     meeting_type=type, worker_ids=worker, recruitment_process_id=process)
         meeting = Calendar.get_meeting(id)
         response = redirect('calendar')
@@ -159,7 +162,7 @@ class Index(View):
     login_url = 'login/'
 
     def get(self, request):
-        return render(request, self.template) 
+        return render(request, self.template)
 
 class Login(View):
     template = 'login.html'
@@ -168,7 +171,7 @@ class Login(View):
     def get(self, request):
         form = AuthenticationForm()
         return render(request, self.template,{'form': form})
-    
+
     def post(self, request):
         form = AuthenticationForm(request.POST)
         username = request.POST['username']
@@ -178,15 +181,15 @@ class Login(View):
             login(request, user)
             response = redirect(self.request.GET.get('next', '/'))
             return response
-        
-        else: 
+
+        else:
             return render(request,self.template, {'form':form})
 
 def log_out(request):
     logout(request)
     response = redirect('/login/')
     return response
-    
+
 class calendar(LoginRequiredMixin, View):
     template = 'calendar.html'
     login_url = '/login'
@@ -197,7 +200,7 @@ class calendar(LoginRequiredMixin, View):
         if request.user.is_authenticated:
             worker = WorkersAPI.get_worker_by_user_id(request.user.id)
         selected = 0
-        return render(request, self.template, {'meetings':meetings, 'selected':selected, 'worker':worker}) 
+        return render(request, self.template, {'meetings':meetings, 'selected':selected, 'worker':worker})
 
 class candidates(LoginRequiredMixin, View):
     template = 'candidates.html'
@@ -209,7 +212,7 @@ class candidates(LoginRequiredMixin, View):
         if request.user.is_authenticated:
             worker = WorkersAPI.get_worker_by_user_id(request.user.id)
         selected = 0
-        return render(request, self.template, {'candidates':candidates, 'selected':selected, 'worker':worker}) 
+        return render(request, self.template, {'candidates':candidates, 'selected':selected, 'worker':worker})
 
 def delete_candidate(request, id):
     CandidatesAPI.delete_candidate(id)
@@ -231,14 +234,14 @@ def dont_hire_candidate(request, id):
 def edit_candidate_page(request,id_candidate):
 
     if(request.method=='POST'):
-        CandidatesAPI.edit_candidate(id=id_candidate,name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
+        CandidatesAPI.edit_candidate(id=id_candidate,name=request.POST['candidate_name'],surname=request.POST['candidate_surname'],
                         birthday=request.POST['candidate_birthdate'], phone_number=request.POST['candidate_phone_number'],
                         sex=request.POST['candidate_sex'], email=request.POST['candidate_email'],
                         cv=request.POST['candidate_cv'],motivation_letter=request.POST['candidate_motivation_letter'],)
         candidate=Candidates.objects.get(ID=id_candidate)
-        candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d") 
+        candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d")
         return redirect('candidates')
-   
+
     candidate=Candidates.objects.get(ID=id_candidate)
     candidate.Birthdate =candidate.Birthdate.strftime("%Y-%m-%d")
     return render(request,'editcandidate.html',{'candidate':candidate})
@@ -247,21 +250,21 @@ def add_interview_data_page(request,id_process):
 
     if (check_if_interview_took_place(id_process=id_process)):
         return redirect('interview_summary_page',id_process=id_process)
-    
+
     process = Recruitment_Process.objects.get(ID=id_process)
 
     if (process.Stage == '1'):
         return redirect('interviews')
 
     if(request.method=='POST'):
-        InterviewsAPI.add_interview_data(id_process=id_process, 
+        InterviewsAPI.add_interview_data(id_process=id_process,
                                         id_worker=WorkersAPI.get_worker_by_user_id(request.user.id).ID,
-                                        hard_skils=request.POST['hard_skils'], 
-                                       soft_skils=request.POST["soft_skils"], grade=request.POST["grade"],
-                                        notes=request.POST['notes']) 
+                                        hard_skils=request.POST['hard_skils'],
+                                        soft_skils=request.POST["soft_skils"], grade=request.POST["grade"],
+                                        notes=request.POST['notes'])
         return redirect('interview_summary_page',id_process=id_process)
 
-    
+
     candidate=Candidates.objects.get(ID=process.ID_Candidates.ID)
     role = Candidates_Role.objects.get(ID=process.ID_Candidates_Role.ID)
 
@@ -276,7 +279,7 @@ def interview_summary_page(request, id_process):
 
     process = Recruitment_Process.objects.get(ID=id_process)
     candidate=Candidates.objects.get(ID=process.ID_Candidates.ID)
-    role = Candidates_Role.objects.get(ID=process.ID_Candidates_Role.ID)   
+    role = Candidates_Role.objects.get(ID=process.ID_Candidates_Role.ID)
     interview_data = Recruitment_Meetings.objects.get(ID_Recruitment_Process=process)
     if(request.method=='POST'):
         if(request.POST['form_type']=='backform'):
@@ -285,35 +288,35 @@ def interview_summary_page(request, id_process):
                 'interview_data': interview_data})
 
 def assistant_page(request):
-# 
+#
     if(request.method=='POST'):
         if(request.POST['form_type']=='addform'):
-           return  redirect('add_candidate_page') 
+            return  redirect('add_candidate_page')
         if(request.POST['form_type']=='editform'):
-           return  redirect('edit_candidate_page',id_candidate=int(request.POST["candidate"]))
+            return  redirect('edit_candidate_page',id_candidate=int(request.POST["candidate"]))
         if(request.POST['form_type']=='processform'):
-           return redirect('add_process_page')
+            return redirect('add_process_page')
 
-    candidates = Candidates.objects.all() 
+    candidates = Candidates.objects.all()
     return render(request,"assistant.html",{'candidates':candidates})
 
 def add_candidate_page(request):
     if request.method=="POST":
-        add_candidate(name=request.POST['candidate_name'],surname=request.POST['candidate_surname'], 
+        add_candidate(name=request.POST['candidate_name'],surname=request.POST['candidate_surname'],
                         birthday=request.POST['candidate_birthdate'], phone_number=request.POST['candidate_phone_number'],
                         sex=request.POST['candidate_sex'], email=request.POST['candidate_email'],
                         cv=request.POST['candidate_cv'],motivation_letter=request.POST['candidate_motivation_letter'],
                         hired='P')
         return redirect('candidates')
 
-    return render(request,"addcandidate.html") 	
+    return render(request,"addcandidate.html")
 
 def add_process_page(request,id_candidate):
     id_all_roles= Candidates_Role.objects.all().values_list('ID',flat=True)
     roles=list_candidate_available_roles(id_candidate=id_candidate)
     candidate = Candidates.objects.get(ID=id_candidate)
     if(request.method=='POST'):
-        for i in id_all_roles: 
+        for i in id_all_roles:
             try:
                 add_process(id_candidate=id_candidate, id_role=request.POST[f'{i}'])
             except:
@@ -382,7 +385,7 @@ class interviews(LoginRequiredMixin, View):
         if request.user.is_authenticated:
             worker = WorkersAPI.get_worker_by_user_id(request.user.id)
         selected = 0
-        return render(request, self.template, {'candidates':candidates, 'selected':selected, 'worker':worker, 'processes':processes, 'interviews':interviews, 'tests':_tests}) 
+        return render(request, self.template, {'candidates':candidates, 'selected':selected, 'worker':worker, 'processes':processes, 'interviews':interviews, 'tests':_tests})
 
 
 
@@ -391,7 +394,38 @@ class interviews(LoginRequiredMixin, View):
 def supervisor_page(request):
 
     if(request.method=='POST'):
-       return redirect(interview_summary_page,id_process=int(request.POST['process'])) 
+        return redirect(interview_summary_page,id_process=int(request.POST['process']))
 
     tests_with_processes = Tests.objects.all()
     return render(request,'supervisor.html',{'tests_with_processes':tests_with_processes})
+
+def report(request):
+    buffer = io.BytesIO()
+    pdf = canvas.Canvas(buffer)
+    pdf.setTitle('Report')
+    text = pdf.beginText(40, 680)
+    text.setFont("Helvetica", 14)
+    for role in Candidates_Role.objects.all():
+        candidates = list_candidates_by_role(role.ID)
+        candidates_tru = candidates.filter(Hired=constants.HIRED_YES)
+        cands_tru_count = candidates_tru.count()
+        cands_fal = candidates.filter(Hired=constants.HIRED_NO).count()
+        all_cands = cands_tru_count + cands_fal
+        avg_test = tests.return_test(role.ID).values('Points').aggregate(Avg('Points'))
+        names = ''
+        for candidate in candidates_tru:
+            names += candidate.Name + ' ' + candidate.Surname + ', '
+        lines = ['Role: ' + role.Name,
+                'All candidates that took part: ' + str(all_cands),
+                'Candidates that passed: ' +  str(cands_tru_count),
+                'Candidates names: ' + names,
+                'Candidates that failed: ' + str(cands_fal),
+                'Average test grade: ' + str(avg_test),
+                ' ']
+        for line in lines:
+            text.textLine(line)
+    pdf.drawText(text)
+    pdf.showPage()
+    pdf.save()
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='hello.pdf')

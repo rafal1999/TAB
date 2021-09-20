@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
- 
+
 {% block content %}
 
 <link
@@ -28,10 +28,13 @@
                         <li class="nav-item" >
                             <a class="nav-link disabled" style="font-style: italic; color:ivory" >Interview data</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/pdf" class="nav-link">Report</a>
+                        </li>
                     </ul>
                 </div>
             </div>
-        </nav>   
+        </nav>
         <nav class="navbar fixed-bottom navbar-dark bg-primary " style="height: 50px" ></nav>
 
 
@@ -46,7 +49,7 @@
   <form method="POST">
         {% csrf_token %}
         Hard skills:
-        <br> 
+        <br>
         <textarea name="hard_skils" id="id_hard_skils" rows="4" cols="50">
             Enter here data.
         </textarea>
@@ -64,14 +67,14 @@
         </textarea>
         <br><br>
         Grade:
-        <br> 
+        <br>
         <input name="grade" id="id_grade" type="range" min="0" max="10" step="1"/>
         <br><br>
         <button class="btn btn-primary">Save</button>
   </form>
 </center>
 </body>
-  
+
 
 
 </html>

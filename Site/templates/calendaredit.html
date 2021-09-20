@@ -29,10 +29,13 @@
                         <li class="nav-item">
                             <a href="/interviews" class="nav-link" >Interviews</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/pdf" class="nav-link">Report</a>
+                        </li>
                     </ul>
                 </div>
             </div>
-        </nav>   
+        </nav>
         <nav class="navbar fixed-bottom navbar-dark bg-primary " style="height: 50px" ></nav>
 
 <br><br>
@@ -43,7 +46,7 @@
     <input name="meeting_desc" id="id_meeting_desc" placeholder="Description" value="{{meeting.Description}}"/>
     <br>
 
-    <br>Date: <i>(last date: {{meeting.Meeting_date}})</i></br> 
+    <br>Date: <i>(last date: {{meeting.Meeting_date}})</i></br>
     <input type="datetime-local" name="Meeting_date" id="id_meeting_desc"/>
     <span class="iconify" data-icon="mdi:help-circle" style="color: lightcoral;" data-toggle="tooltip" data-placement="right" title="YYYY-MM-DD"></span>
     <br>
@@ -68,7 +71,7 @@
     </select>
     <br></br>
     <button class="btn btn-primary" >Submit</button>
-</form> 
+</form>
 
 {{ debug }}
 

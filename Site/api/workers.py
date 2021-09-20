@@ -1,5 +1,5 @@
 
-from Site.models                import Candidates, Workers, Workers_Role 
+from Site.models                import Candidates, Workers, Workers_Role
 from datetime                   import date
 
 

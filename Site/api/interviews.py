@@ -11,7 +11,7 @@ def save_interview(interview_id, hard_skills:str, soft_skills:str, grade, notes:
 	interview.Grade = grade
 	interview.Notes = notes
 	interview.save()
-	
+
 def delete_interview(interview_id):
     Recruitment_Meetings.objects.filter(pk=interview_id).delete()
 
@@ -28,7 +28,7 @@ def add_interview_data(id_process,id_worker, hard_skils, soft_skils, grade, note
 
 
 def check_if_interview_took_place(id_process):
-    
+
     if Recruitment_Meetings.objects.filter(ID=id_process).exists():
         return True
     else:

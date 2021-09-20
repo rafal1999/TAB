@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
- 
+
 {% block content %}
 
 <link
@@ -24,6 +24,9 @@
                         </li>
                         <li class="nav-item">
                             <a href="/interviews" class="nav-link">Interviews</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/pdf" class="nav-link">Report</a>
                         </li>
                     </ul>
                 </div>
@@ -52,9 +55,9 @@
             </thead>
             <tbody >
                 {% for c in candidates %}
-                        <tr onclick="select({{c.ID}})"> 
+                        <tr onclick="select({{c.ID}})">
                         <td>{{c.Name}}</td>
-                        <td>{{c.Surname}}</td> 
+                        <td>{{c.Surname}}</td>
                         <td>{{c.Birthdate}}</td>
                         <td>{{c.Sex}}</td>
                         <td>{{c.Application_date}}</td>
@@ -64,7 +67,7 @@
                         <td><a href="{{c.CV}}">link</a></td>
                         {% if worker.ID_Workers_Role.Name == "Head" %} <td>{{c.Hired}}</td>{%endif%}</tr>
                 {% endfor %}
-            </tbody> 
+            </tbody>
         </table>
     </div>
 </div>
@@ -84,9 +87,9 @@
 {% endif %}
 
 {% endblock content %}
- 
+
 {% block js %}
- 
+
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
 
@@ -161,7 +164,7 @@
             window.location.href = "delete/" + document.getElementById('curr').innerHTML;
     }
 </script>
- 
+
 <script>
     $(document).ready(function () {
     var t = $('#table_db').DataTable( {
@@ -198,5 +201,5 @@
     });
 });
 </script>
- 
+
 {% endblock js %}

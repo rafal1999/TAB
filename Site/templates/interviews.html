@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
- 
+
 {% block content %}
 
 <link
@@ -25,6 +25,9 @@
                         <li class="nav-item">
                             <a href="/interviews" class="nav-link" style="color: ivory;">Interviews</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/pdf" class="nav-link">Report</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -47,9 +50,9 @@
             </thead>
             <tbody >
                 {% for p in processes %}
-                        <tr onclick="select({{p.ID}})"> 
+                        <tr onclick="select({{p.ID}})">
                         <td>{{p.ID_Candidates.Name}}</td>
-                        <td>{{p.ID_Candidates.Surname}}</td> 
+                        <td>{{p.ID_Candidates.Surname}}</td>
                         <td>{{p.ID_Candidates_Role.Name}}</td>
                         <td style='text-align: center'>
                         {%for i in interviews%}
@@ -66,7 +69,7 @@
                         {%endfor%}
                         </td>
                 {% endfor %}
-            </tbody> 
+            </tbody>
         </table>
     </div>
 </div>
@@ -82,9 +85,9 @@
 <button class="btn btn-primary" id="bShowInterview" onclick="ShowInterview()">Show interview data</button>
 {% endif %}
 {% endblock content %}
- 
+
 {% block js %}
- 
+
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
 
@@ -158,5 +161,5 @@
     });
 });
 </script>
- 
+
 {% endblock js %}

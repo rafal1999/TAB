@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
- 
+
 {% block content %}
 
 <link
@@ -29,25 +29,28 @@
                         <li class="nav-item">
                             <a href="/interviews" class="nav-link">Interviews</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/pdf" class="nav-link">Report</a>
+                        </li>
                     </ul>
                 </div>
             </div>
-        </nav>   
+        </nav>
         <nav class="navbar fixed-bottom navbar-dark bg-primary " style="height: 50px" ></nav>
 
         <center>
             <br><br>
-            <h1> {{candidate.Name}} {{candidate.Surname}} </h1>    
+            <h1> {{candidate.Name}} {{candidate.Surname}} </h1>
         </center>
         <br><br>
-        
+
         <fieldset style=" text-align: center; " >
             <legend style="padding: 10px;">Candidate role:</legend>
                 <form method="POST">
                     {% csrf_token %}
                     {% if roles %}
-                    
-                        {% for r in roles%}  
+
+                        {% for r in roles%}
                         <input type="checkbox" id="{{r.ID}}" name="{{r.ID}}" value="{{r.ID}}">
                         <label for="{{r.ID}}"> {{r.Name}}</label><br>
                         <br>
@@ -62,7 +65,7 @@
 
                 </form>
         </fieldset>
-        
+
 </html>
 
 {% endblock content %}
