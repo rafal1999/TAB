@@ -1,4 +1,7 @@
+{% extends 'base.html' %}
 {% load static %}
+
+{% block content %}
 
 <link
     rel="stylesheet"
@@ -7,45 +10,85 @@
 />
 
 <html>
+    <title>Candidates recruitment system</title>
+    <body style="background-color:ivory">
+        <nav class="navbar fixed-top navbar-dark bg-primary navbar-expand-lg" style="height: 50px" >
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Logo</a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="/calendar/" class="nav-link" style="color: ivory;">Calendary</a>
+                        </li>
+                        <li class="nav-item" >
+                            <a class="nav-link disabled" style="font-style: italic; color:ivory" >Edit meeting</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/candidates" class="nav-link" >Candidates</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/interviews" class="nav-link" >Interviews</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>   
+        <nav class="navbar fixed-bottom navbar-dark bg-primary " style="height: 50px" ></nav>
 
-<h1>Editing meeting</h1>
-    <table id="id_table">
-        <tr><td>Date: {{meeting.Meeting_date}}</td><td>Desc: {{meeting.Description}}</td><td>Type: {{meeting.Meeting_type}}</td><td>Worker: {{ worker.Name }} {{ worker.Surname }}</td></tr>
-    </table>
-
+<br><br>
+<center>
 <form method="POST">
     {% csrf_token %}
-    <br>Description</br>
+    <br>Description:</br>
     <input name="meeting_desc" id="id_meeting_desc" placeholder="Description" value="{{meeting.Description}}"/>
-    <br>Date</br> 
-    <input type="datetime-local" name="Meeting_date" id="id_meeting_desc" />
-    <br>Type</br>
+    <br>
+
+    <br>Date: <i>(last date: {{meeting.Meeting_date}})</i></br> 
+    <input type="datetime-local" name="Meeting_date" id="id_meeting_desc"/>
+    <span class="iconify" data-icon="mdi:help-circle" style="color: lightcoral;" data-toggle="tooltip" data-placement="right" title="YYYY-MM-DD"></span>
+    <br>
+
+    <br>Type:</br>
     {{ tf.Meeting_type }}
-    <br>Worker</br>
+    <br>
+
+    <br>Worker:</br>
     <select name="workers" id="workers">
     {% for w in workers %}
       <option>{{w.Name}} {{w.Surname}}</option>
     {% endfor %}
     </select>
-    <br></br>
+    <br>
+
+    <br>Candidate:</br>
     <select name="process" id="process">
     {% for p in processes %}
       <option>{{p}}</option>
     {% endfor %}
     </select>
     <br></br>
-    <button>Submit</button>
+    <button class="btn btn-primary" >Submit</button>
 </form> 
 
 {{ debug }}
 
-<button onclick="Return()">Return</button>
-
+<button class="btn btn-primary" onclick="Return()">Return</button>
+</center>
+</body>
 </html>
-
+{% endblock content %}
+{% block js %}
+<script src="https://code.iconify.design/2/2.0.3/iconify.min.js"></script>
 <script>
 function Return()
     {
         location.replace("/calendar");
     }
     </script>
+
+<script>
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+  })
+  </script>
+  {% endblock js %}
