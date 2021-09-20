@@ -24,13 +24,11 @@ class Candidates(models.Model): #TODO zmienić klucz obcy do Ról kandydatów
     Birthdate = models.DateField(auto_now=False, auto_now_add=False)
     Application_date = models.DateField(auto_now=False, auto_now_add=True)
     Phone_number=models.CharField(max_length=13, null=True)
-    Sex = models.CharField(max_length=1, null=True,default=None, choices=constants.SEX_OPTIONS)#=[(tag,tag.value) for tag in sex_choice])
+    Sex = models.CharField(max_length=1, null=True,default=None, choices=constants.SEX_OPTIONS)
     Email_address = models.EmailField(max_length=50,null=True)
-    CV= models.TextField(default="")                                                                                #TODO mozliwa zmiana argumentów gdzy dojdzemy do implemetacji cv
-    Motivation_letter = models.TextField(default="")                                                                #TODO mozliwa zmiana argumentów gdzy dojdzemy do implementacji
-    Hired = models.CharField(max_length=10,default='',choices=constants.HIRED_OPTIONS)# choices=[(tag,tag.value) for tag in hired_choice])
-    
-    # CV_v2= models.FilePathField(unique=True,path=None, match=None,max_length=200) #TODO trzeba przetestować bardziej wnikliwie 
+    CV= models.TextField(default="")                                                                                
+    Motivation_letter = models.TextField(default="")                                                                
+    Hired = models.CharField(max_length=10,default='',choices=constants.HIRED_OPTIONS)    
     
     class Meta:
         verbose_name = 'Candidate'
@@ -43,7 +41,7 @@ class Recruitment_Process(models.Model):
     ID = models.AutoField(primary_key=True)
     Stage = models.CharField(max_length=1,default='',choices=constants.STAGE_OPTIONS)#choices=[(tag,tag.value) for tag in stage_choice]) 
     ID_Candidates_Role = models.ForeignKey('Candidates_Role',default=None,null=True,verbose_name='Candidate role', on_delete= models.SET_NULL)
-    ID_Candidates = models.ForeignKey("Candidates", default=None, null=True, verbose_name='Candidate' ,on_delete=models.SET_NULL)
+    ID_Candidates = models.ForeignKey("Candidates", default=None, null=True, verbose_name='Candidate' ,on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Process'
@@ -99,7 +97,7 @@ class Recruitment_Meetings(models.Model):
     Grade = models.DecimalField(max_digits = 2, decimal_places = 0, validators=[MaxValueValidator(10),MinValueValidator(0)])
     Notes = models.TextField(default="",null=True)
     Date = models.DateField(auto_now=False, auto_now_add=True)
-    ID_Recruitment_Process = models.ForeignKey("Recruitment_Process", default=None, null=True, verbose_name='Recruitment process' ,on_delete=models.SET_NULL)
+    ID_Recruitment_Process = models.ForeignKey("Recruitment_Process", default=None, null=True, verbose_name='Recruitment process' ,on_delete=models.CASCADE)
     ID_Workers = models.ForeignKey("Workers", default=None,verbose_name='Worker' ,null=True, on_delete=models.SET_NULL)
     class Meta:
         verbose_name = 'meeting'
