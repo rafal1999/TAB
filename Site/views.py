@@ -395,13 +395,18 @@ def report(request):
     text.setFont("Helvetica", 14)
     for role in Candidates_Role.objects.all():
         candidates = list_candidates_by_role(role.ID)
-        cands_tru = candidates.filter(Hired=constants.HIRED_YES).count()
+        candidates_tru = candidates.filter(Hired=constants.HIRED_YES)
+        cands_tru_count = candidates_tru.count()
         cands_fal = candidates.filter(Hired=constants.HIRED_NO).count()
-        all_cands = cands_tru + cands_fal
-        avg_test = tests.return_test(role.ID).aggregate(Avg('Points'))
+        all_cands = cands_tru_count + cands_fal
+        avg_test = tests.return_test(role.ID).values('Points').aggregate(Avg('Points'))
+        names = ''
+        for candidate in candidates_tru:
+            names += candidate.Name + ' ' + candidate.Surname + ', '
         lines = ['Role: ' + role.Name,
                 'All candidates that took part: ' + str(all_cands),
-                'Candidates that passed: ' +  str(cands_tru),
+                'Candidates that passed: ' +  str(cands_tru_count),
+                'Candidates names: ' + names,
                 'Candidates that failed: ' + str(cands_fal),
                 'Average test grade: ' + str(avg_test),
                 ' ']
