@@ -72,11 +72,14 @@
 </div>
 
 <p hidden id="curr"></p>
-{% if worker.ID_Workers_Role.Name != "Assistant" %}
+{% if worker.ID_Workers_Role.Name == "Recruiter" %}
 <button class="btn btn-primary" id="bInterview" onclick="Interview()">Start interview</button>
 <button class="btn btn-primary" id="bShowInterview" onclick="ShowInterview()">Show interview data</button>
 <br></br>
 <button class="btn btn-primary" id="bAddMark" onclick="AddMark()">Set test score</button>
+{% endif %}
+{% if worker.ID_Workers_Role.Name == "Head"%}
+<button class="btn btn-primary" id="bShowInterview" onclick="ShowInterview()">Show interview data</button>
 {% endif %}
 {% endblock content %}
  
