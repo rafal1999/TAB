@@ -7,7 +7,7 @@ from Site.models import Candidates, Candidates_Role, Tests, Recruitment_Process
 
 def add_candidate(name:str,surname:str,birthday,phone_number,sex,email,cv,
                     motivation_letter,hired):
-    
+
     Candidates.objects.create(Name=name,Surname=surname,Birthdate=birthday,
                                 Phone_number=phone_number,Sex=sex,CV=cv,Email_address=email,
                                 Motivation_letter=motivation_letter,Hired=hired)
@@ -21,7 +21,7 @@ def edit_candidate(id,name,surname,birthday,phone_number,sex,email,cv,
 
 
 def list_candidates():
-    return Candidates.objects.all() 
+    return Candidates.objects.all()
 
 
 def list_candidates_roles():
@@ -31,10 +31,10 @@ def list_candidate_available_roles(id_candidate):
     processes = Recruitment_Process.objects.filter(ID_Candidates=Candidates.objects.get(ID=id_candidate),)
     id_roles_candidate=processes.values_list("ID_Candidates_Role",flat=True)
     id_roles=Candidates_Role.objects.all().values_list('ID',flat=True)
-    id_free_roles_for_candidate = [item for item in  id_roles if 
+    id_free_roles_for_candidate = [item for item in  id_roles if
                                             item not in id_roles_candidate]
     return Candidates_Role.objects.filter(ID__in=id_free_roles_for_candidate)
-    
+
 
 def delete_candidate(id):
     Candidates.objects.filter(pk=id).delete()
