@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
- 
+
 {% block content %}
 
 <link
@@ -25,12 +25,15 @@
                         <li class="nav-item">
                             <a href="/interviews" class="nav-link">Interviews</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/pdf" class="nav-link">Report</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
 
-        
+
     <nav class="navbar fixed-bottom navbar-dark bg-primary " style="height: 50px" ></nav>
     </body>
 
@@ -59,7 +62,7 @@
                         <td>{% if c.Meeting_status == "P" %} Pending {% elif c.Meeting_status == "C" %} <font style="color:red">Cancelled - reason: {{c.Cancel_reason}}</font> {% else %} Confirmed {% endif %}</td></tr>
                     {% endif %}
                 {% endfor %}
-            </tbody> 
+            </tbody>
         </table>
     </div>
 </div>
@@ -80,9 +83,9 @@
 
 
 {% endblock content %}
- 
+
 {% block js %}
- 
+
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
 
@@ -142,7 +145,7 @@
             window.location.href = "delete/" + document.getElementById('curr').innerHTML;
     }
 </script>
- 
+
 <script>
     $(document).ready(function () {
     var t = $('#table_db').DataTable( {
@@ -173,5 +176,5 @@
     });
 });
 </script>
- 
+
 {% endblock js %}

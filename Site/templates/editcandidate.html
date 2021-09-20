@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
- 
+
 {% block content %}
 
 <link
@@ -29,22 +29,25 @@
                         <li class="nav-item">
                             <a href="/interviews" class="nav-link">Interviews</a>
                         </li>
+                        <li class="nav-item">
+                          <a href="/pdf" class="nav-link">Report</a>
+                      </li>
                     </ul>
                 </div>
             </div>
-        </nav>   
+        </nav>
         <nav class="navbar fixed-bottom navbar-dark bg-primary " style="height: 50px" ></nav>
 
         <br><br><br><br>
         <form method="POST">
             {% csrf_token %}
 
-            <div class="container">  
+            <div class="container">
               <div class="row justify-content-center">
                   <div class="col-md-4">
                       <label for="id_worker_name" class="form-label">Name:</label>
                       <input name="candidate_name" id="id_worker_name" value="{{candidate.Name}}" class="form-control">
-                  </div>  
+                  </div>
                   <div class="col-md-4">
                     <label for="id_worker_name" class="form-label">Surname:</label>
                     <input name="candidate_surname" id="id_worker_name" value="{{candidate.Surname}}" class="form-control">
@@ -61,7 +64,7 @@
                       <option selected value="U">unisex</option>
                      </select>
                   </div>
-               </div> 
+               </div>
               <br>
 
               <div class="row justify-content-center">

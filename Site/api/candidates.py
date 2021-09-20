@@ -61,7 +61,7 @@ def list_processes_by_role_and_stage(id_role,stage):
 def list_processes_without_tests_by_role(id_role):
     id_processes_with_role = list_processes_by_role(id_role=id_role).values_list('ID',flat=True)
     id_all_processes_with_tests = Tests.objects.values_list('ID_Recruitment_Process',flat=True)
-    id_processes_with_role_without_tests = [item for item in  id_processes_with_role if 
+    id_processes_with_role_without_tests = [item for item in  id_processes_with_role if
                                             item not in id_all_processes_with_tests]
     print(id_processes_with_role_without_tests)
     processes= Recruitment_Process.objects.filter(ID__in=id_processes_with_role_without_tests)

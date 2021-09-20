@@ -1,13 +1,13 @@
 
 <html>
 
-    <h1>Rekruter</h1>    
-    
+    <h1>Rekruter</h1>
+
     <form method="POST">
         {% csrf_token %}
         select role:
         <select name="role" id="id_role">
-            {% for r in roles%}  
+            {% for r in roles%}
             <option  value="{{r.ID}}">{{r.Name}}</option>
             {% endfor %}
         </select>

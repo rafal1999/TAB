@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
- 
+
 {% block content %}
 
 <link
@@ -29,16 +29,19 @@
                         <li class="nav-item" >
                             <a class="nav-link disabled" style="font-style: italic; color: ivory;" >Set test score</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/pdf" class="nav-link">Report</a>
+                        </li>
                     </ul>
                 </div>
             </div>
-        </nav>   
+        </nav>
         <nav class="navbar fixed-bottom navbar-dark bg-primary " style="height: 50px" ></nav>
-   
+
     <form method="POST" id="addform">
         {% csrf_token %}
         <input type="hidden" name="form_type" value="addform">
-        
+
             {% for p in processes%}                                                          <!--odcoywanie się do tabel połaczonych nie wprost przez klucz obcy (taka składnia) c.ID_Workers_Role.Name-->
                 <center>
                     <br><br>
@@ -46,11 +49,11 @@
                     <br>
 
                     <input type="number" min="0" max="10" step="1" name="grade">
-                    
+
                         {% empty %}
                         All candidates have marks!
                         {% endfor %}
-                    
+
                     <button class="btn btn-primary">Save</button>
     </form>
     <form method="POST" id="backform">
@@ -58,7 +61,7 @@
         <input type="hidden" name="form_type" value="backform">
         <br><br>
         <button class="btn btn-primary">Back</button>
-    
+
     </form>
                 </center>
     </body>

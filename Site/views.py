@@ -16,7 +16,7 @@ from django.contrib.auth        import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from Site.api.candidates        import (list_candidates, add_candidate, list_candidates_roles, add_process,
                                         list_processes_by_role, list_processes_without_tests_by_role, list_processes_by_role_and_stage,
-                                        list_candidate_available_roles)
+                                        list_candidate_available_roles, list_candidates_by_role)
 from Site.api.interviews        import check_if_interview_took_place, add_interview_data
 import Site.api.workers         as WorkersAPI
 import Site.api.calendar        as Calendar
@@ -276,7 +276,7 @@ def interview_summary_page(request, id_process):
                 'interview_data': interview_data})
 
 def assistant_page(request):
-# 
+#
     if(request.method=='POST'):
         if(request.POST['form_type']=='addform'):
             return  redirect('add_candidate_page')
@@ -390,24 +390,23 @@ def supervisor_page(request):
 def report(request):
     buffer = io.BytesIO()
     pdf = canvas.Canvas(buffer)
-    process_list = None
-    for role in Candidates_Role.objects.all():
-        process_list = list_processes_by_role(role.ID)
-        print(process_list.ID_Candidates)
-    cands_tru = Candidates.objects.filter(Hired=constants.HIRED_YES).count()
-    cands_fal = Candidates.objects.filter(Hired=constants.HIRED_NO).count()
-    avg_test = Tests.objects.all().aggregate(Avg('Points'))
-    avg_interview = Recruitment_Meetings.objects.all().aggregate(Avg('Grade'))
-    all_cands = cands_tru + cands_fal
     pdf.setTitle('Report')
-    lines = ['All candidates that took part: ' + str(all_cands),
-            'Candidates that passed: ' +  str(cands_tru),
-            'Average test grade: ' + str(avg_test),
-            'Average interview grade: ' + str(avg_interview)]
     text = pdf.beginText(40, 680)
     text.setFont("Helvetica", 14)
-    for line in lines:
-        text.textLine(line)
+    for role in Candidates_Role.objects.all():
+        candidates = list_candidates_by_role(role.ID)
+        cands_tru = candidates.filter(Hired=constants.HIRED_YES).count()
+        cands_fal = candidates.filter(Hired=constants.HIRED_NO).count()
+        all_cands = cands_tru + cands_fal
+        avg_test = tests.return_test(role.ID).aggregate(Avg('Points'))
+        lines = ['Role: ' + role.Name,
+                'All candidates that took part: ' + str(all_cands),
+                'Candidates that passed: ' +  str(cands_tru),
+                'Candidates that failed: ' + str(cands_fal),
+                'Average test grade: ' + str(avg_test),
+                ' ']
+        for line in lines:
+            text.textLine(line)
     pdf.drawText(text)
     pdf.showPage()
     pdf.save()
