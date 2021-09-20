@@ -27,6 +27,11 @@
                         <li class="nav-item">
                             <a href="/pdf" class="nav-link">Report</a>
                         </li>
+                        </ul>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="/logout" class="nav-link">Log out</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -40,9 +45,7 @@
 
 
 {% if user.is_authenticated %}
-  Hi, {{ worker.Name }} {{ worker.Surname }} ({{ user.username }})
-  <a href="{% url 'logout' %}">Log Out</a>
-  {{worker.ID_Workers_Role}}
+  Hi, {{ worker.Name }} {{ worker.Surname }} ({{worker.ID_Workers_Role}})
 {% else %}
   <p>You are not logged in</p>
   <a href="{% url 'login' %}">Log In</a>
