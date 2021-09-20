@@ -1,4 +1,4 @@
-from Site.models import Candidates, Candidates_Role, Tests, Recruitment_Process
+from Site.models import Candidates, Candidates_Role, Recruitment_Meetings, Tests, Recruitment_Process
 
 
 
@@ -72,3 +72,8 @@ def add_process(id_candidate, id_role):
     if (process.exists() == False):
         Recruitment_Process.objects.create(ID_Candidates=Candidates.objects.get(ID=id_candidate),
                                         ID_Candidates_Role=Candidates_Role.objects.get(ID=id_role),Stage=1)
+
+def list_candidates_by_role(id_role):
+    candidate_ids = Recruitment_Process.objects.filter(ID_Candidates_Role=id_role).values_list('ID_Candidates', flat=True)
+    candidates = Candidates.objects.filter(pk__in=candidate_ids)
+    return candidates
